@@ -1,0 +1,40 @@
+# Global ignores
+*.log
+*.env
+.DS_Store
+__pycache__/
+*.pyc
+
+# Python/Flask backend ignores
+astro-backend/instance/
+astro-backend/.venv/
+astro-backend/venv/
+astro-backend/env/
+astro-backend/.env
+astro-backend/__pycache__/
+astro-backend/*.pyc
+astro-backend/*.pyo
+astro-backend/*.pyd
+astro-backend/migrations/
+astro-backend/.pytest_cache/
+astro-backend/.coverage
+astro-backend/htmlcov/
+astro-backend/.mypy_cache/
+
+# Node/React frontend ignores
+astro-frontend/node_modules/
+astro-frontend/.env
+astro-frontend/build/
+astro-frontend/.DS_Store
+astro-frontend/.eslintcache
+astro-frontend/npm-debug.log*
+astro-frontend/yarn-debug.log*
+astro-frontend/yarn-error.log*
+astro-frontend/.parcel-cache/
+
+# Optional: Editor/IDE specific ignores
+.vscode/
+.idea/
+*.swp
+
+material-ui-vite/
