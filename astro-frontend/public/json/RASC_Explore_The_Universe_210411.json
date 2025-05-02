@@ -1,0 +1,651 @@
+﻿{
+
+    "bookmarks": {
+        "{0090dc6e-b225-4f83-91ac-cfa9938e05bb}": {
+            "_comment_author": "Blake Nancarrow, blaken AT computer DASH ease DOT com.",
+            "_comment_dates": "Made on 9 Apr 2021. Updated on 11 Apr 2021. Version 210411.",
+            "_comment_notes": "Source RASC ETU program. Planet/moon nomenclature, meteors, and satellites must be enabled. Bug in Stellarium for constellation Hercules requires use of custom marker.",
+            "name": "Camelopardalis",
+            "nameI18n": "extra constellation - Camelopardalis"
+        },
+        "{0095c987-42b9-49bc-80c8-8d2e06db2f24}": {
+            "name": "M 8",
+            "nameI18n": "deep sky object - Messier 008, Lagoon Nebula"
+        },
+        "{00c7352e-ae9c-4a9c-8820-7b6a965aacb9}": {
+            "name": "HIP 11767",
+            "nameI18n": "bright star - Polaris"
+        },
+        "{03f9f68e-2ef5-4305-813a-8b2388ae0416}": {
+            "name": "Mare Tranquillitatis (Moon)",
+            "nameI18n": "lunar maria - Sea of Tranquility"
+        },
+        "{04b68f67-561d-4921-81ca-1819904e03af}": {
+            "name": "Capricornus",
+            "nameI18n": "constellation - Capricornus (The Sea Goat)"
+        },
+        "{06efb761-af13-4128-995f-3b3912ce2552}": {
+            "name": "HIP 60904",
+            "nameI18n": "double star - 17 Com"
+        },
+        "{0c129324-bfad-41e7-a621-d8e84e44f9a5}": {
+            "name": "Ursa Major",
+            "nameI18n": "constellation - Ursa Major (The Great Bear)"
+        },
+        "{0c4beac8-c6f0-430f-adab-718a7e69d103}": {
+            "name": "HIP 27989",
+            "nameI18n": "bright star - Betelgeuse"
+        },
+        "{0f7df7a3-5990-4b77-8f76-1e2ad6ec1432}": {
+            "name": "Bootes",
+            "nameI18n": "constellation - Boötes (The Herdsman)"
+        },
+        "{0f9a85e4-d393-4ba7-af84-281998eb5964}": {
+            "name": "Mare Serenitatis (Moon)",
+            "nameI18n": "lunar maria - Sea of Serenity"
+        },
+        "{7ce7b7d5-d218-4787-8f74-95c0dbecf877}": {
+            "name": "HIP 50319",
+            "nameI18n": "double star - Zeta-35 Leo, 36-35 Leo, 35 Leo (and Adhafera)"
+        },
+        "{133dd198-32ea-49dd-97f6-c46dee14ccbd}": {
+            "name": "Aries",
+            "nameI18n": "constellation - Aries (The Ram)"
+        },
+        "{14f72410-018f-4954-9d04-7d32448f394a}": {
+            "name": "Draco",
+            "nameI18n": "extra constellation - Draco"
+        },
+        "{15f4ff66-e895-4927-8c3c-5830dd06a734}": {
+            "name": "HIP 65474",
+            "nameI18n": "bright star - Spica"
+        },
+        "{195e8c78-5b75-4c92-bbbf-c2d8cfa9986c}": {
+            "name": "Cancer",
+            "nameI18n": "extra constellation - Cancer"
+        },
+        "{1aa0d1e2-a686-4b98-bafa-6c667c2640c3}": {
+            "name": "HIP 100345",
+            "nameI18n": "bright star - Dabih"
+        },
+        "{1ca5d5b3-6c72-460c-a3bf-7345da12ef8a}": {
+            "name": "M 47",
+            "nameI18n": "deep sky object - Messier 047, NGC 2422 (open cluster)"
+        },
+        "{1e0ddea1-915d-4f8b-8854-1f3ece77897c}": {
+            "name": "Corona Borealis",
+            "nameI18n": "extra constellation - Corona Borealis"
+        },
+        "{1fffc7d9-ec95-4221-a0a6-c41f84d9e686}": {
+            "name": "M 42",
+            "nameI18n": "deep sky object - Messier 042, Great Orion Nebula"
+        },
+        "{2055c717-543e-4300-b28a-07d8b61c8e3c}": {
+            "name": "Orion",
+            "nameI18n": "constellation - Orion (The Hunter)"
+        },
+        "{20b798ec-635f-4768-89a6-37c894b3318f}": {
+            "name": "Scorpius",
+            "nameI18n": "constellation - Scorpius (The Scorpion)"
+        },
+        "{21a31336-38ef-452c-8692-d17c1e8b6735}": {
+            "name": "HIP 37826",
+            "nameI18n": "bright star - Pollux"
+        },
+        "{24ca8199-6f90-442b-b664-a6f28ccf6835}": {
+            "name": "HIP 91919",
+            "nameI18n": "double star - Epsilon 1 Lyr, Double Double I"
+        },
+        "{24eb3053-8a83-4221-a859-c06bbea273dd}": {
+            "name": "Aristoteles (crater, Moon)",
+            "nameI18n": "lunar impact crater - Aristoteles"
+        },
+        "{24fea0e8-e326-4f3e-bfda-d88512445b3a}": {
+            "name": "HIP 75411",
+            "nameI18n": "double star - Mu 1-Mu 2 Boo, Alkalurops"
+        },
+        "{25336daa-a552-400c-8d4a-143873b8aa51}": {
+            "name": "Theophilus (crater, Moon)",
+            "nameI18n": "lunar impact crater - Theophilus"
+        },
+        "{258a6d20-5814-4710-9c0c-a53b2e3d71c0}": {
+            "name": "M 5",
+            "nameI18n": "deep sky object - Messier 005, Rose Cluster"
+        },
+        "{25c7ef48-e18f-4cdd-b074-ee112b904fec}": {
+            "name": "HIP 80197",
+            "nameI18n": "double star - Nu 1-Nu 2 CrB, Nu 1, 20 CrB"
+        },
+        "{26d0c486-4e0f-4434-b7e7-96db7ae3030d}": {
+            "name": "M 25",
+            "nameI18n": "deep sky object - Messier 025, IC 4725 (open cluster)"
+        },
+        "{280555d0-a889-4ce4-a49c-3ea10cb077ba}": {
+            "name": "M 4",
+            "nameI18n": "deep sky object - Messier 004, NGC 6121, Crab Globular Cluster"
+        },
+        "{29358fe0-585b-47f5-8e6c-8bec08d57fd5}": {
+            "name": "M 17",
+            "nameI18n": "deep sky object - Messier 017, Omega Nebula, Swan Nebula"
+        },
+        "{29b65cd5-ceb1-4879-b0b7-92e2dc4fc377}": {
+            "name": "Kemble's Cascade",
+            "nameI18n": "deep sky object - Kemble's Cascade (asterism)"
+        },
+        "{2b4684f5-fca6-466b-89cd-56e27c37fd5e}": {
+            "name": "HIP 14576",
+            "nameI18n": "bright star - Algol"
+        },
+        "{2b4684f5-fca6-466b-89cd-56e27c37fd5e}": {
+            "name": "HIP 14576",
+            "nameI18n": "variable star - Algol"
+        },
+        "{2b5cbd97-5b52-4c79-89ed-7c235b57fd9b}": {
+            "name": "Saturn",
+            "nameI18n": "solar system - Saturn"
+        },
+        "{2b8e2f5b-5d78-4893-88f7-e936a8156278}": {
+            "name": "Ptolemaeus (crater, Moon)",
+            "nameI18n": "lunar impact crater - Ptolemaeus"
+        },
+        "{2de6060e-4582-47a6-a226-f931e3b56389}": {
+            "name": "Oceanus Procellarum (Moon)",
+            "nameI18n": "lunar maria - Ocean of Storms"
+        },
+        "{2e07208b-dd0d-4854-98b4-f8c2418b2304}": {
+            "name": "M 37",
+            "nameI18n": "deep sky object - Messier 037, NGC 2099, January Salt-and-Pepper Cluster"
+        },
+        "{2f46cbdc-adfa-4867-ae6b-e1e4861341ba}": {
+            "name": "Pluto",
+            "nameI18n": "dwarf planet - Pluto"
+        },
+        "{3095afc1-cbf3-43db-a894-380dc3fda113}": {
+            "name": "Jupiter",
+            "nameI18n": "solar system - Jupiter"
+        },
+        "{31faa2fc-d832-49a7-8ff8-a9448e3189ed}": {
+            "name": "Tycho (crater, Moon)",
+            "nameI18n": "lunar impact crater - Tycho"
+        },
+        "{3e88a0e8-c273-4d11-91bc-271a25ffa8fb}": {
+            "name": "Mare Imbrium (Moon)",
+            "nameI18n": "lunar maria - Sea of Showers"
+        },
+        "{40ceaf1e-93c5-4403-9993-284c713e4dc4}": {
+            "name": "HIP 53910",
+            "nameI18n": "bright star - Merak"
+        },
+        "{4177f570-18bc-4e54-be91-809d6df8f7e6}": {
+            "name": "M 22",
+            "nameI18n": "deep sky object - Messier 022, NGC 6656, Great Sagittarius Cluster"
+        },
+        "{43bb8f3f-e7cb-4d85-8af5-86d59438eae5}": {
+            "name": "HIP 95947",
+            "nameI18n": "bright star - Albireo"
+        },
+        "{49c2f480-fba2-4c8e-ae07-61fb07a0b131}": {
+            "name": "Cepheus",
+            "nameI18n": "extra constellation - Cepheus"
+        },
+        "{4ab5ae55-80d6-4d04-82f5-c10389856cc8}": {
+            "name": "M 11",
+            "nameI18n": "deep sky object - Messier 011, Wild Duck Cluster"
+        },
+        "{614c9d44-8edf-49f7-be67-99e357d25abf}": {
+            "name": "HIP 62819",
+            "nameI18n": "double star - 32-33 Com, 33 Com"
+        },
+        "{8d218efb-67be-44a3-80e8-28ae4759e452}": {
+            "name": "HIP 64217",
+            "nameI18n": "double star - 15-17 CVn, 15 CVn"
+	},
+        "{4e3d9f68-b81e-4428-b8ca-920de33cdff2}": {
+            "name": "HIP 9884",
+            "nameI18n": "bright star - Hamal"
+        },
+        "{4f16e252-bbcc-4c08-ab95-471739e2fb90}": {
+            "name": "HIP 49669",
+            "nameI18n": "bright star - Regulus"
+        },
+        "{53586ae3-5804-43cf-a3b8-8e4d733b808e}": {
+            "name": "Andromeda",
+            "nameI18n": "extra constellation - Andromeda"
+        },
+        "{551715f4-1aee-4d58-bc4b-88354919f0e6}": {
+            "name": "Posidonius (crater, Moon)",
+            "nameI18n": "lunar impact crater - Posidonius"
+        },
+        "{551ff498-e675-4bda-b565-5f6aa5edc3b5}": {
+            "name": "Mare Nubium (Moon)",
+            "nameI18n": "lunar maria - Sea of Clouds"
+        },
+        "{587988dd-621d-427e-8e3b-d9fb9885aa0a}": {
+            "name": "HIP 110991",
+            "nameI18n": "double star - Delta Cep (also variable)"
+        },
+        "{5a2c2b25-4d0d-4a4d-b731-ffa7a4bcf160}": {
+            "name": "HIP 72607",
+            "nameI18n": "bright star - Kochab"
+        },
+        "{5be47927-5407-4d8b-ba5a-2e7cdb416cf8}": {
+            "name": "M 35",
+            "nameI18n": "deep sky object - Messier 035, NGC 2168, Shoe-Buckle Cluster"
+        },
+        "{5c4aa16a-8bd1-4a60-8fee-92e04332114d}": {
+            "name": "Canis Major",
+            "nameI18n": "constellation - Canis Major (The Big Dog)"
+        },
+        "{64e0ea52-10a0-4723-9234-d4228f66318a}": {
+            "name": "Virgo",
+            "nameI18n": "constellation - Virgo (The Maiden)"
+        },
+        "{64fbeddf-363d-4ecb-bd89-894bf14f8907}": {
+            "name": "HIP 97649",
+            "nameI18n": "bright star - Altair"
+        },
+        "{6859944f-c27c-4830-816d-5dc343305b3b}": {
+            "name": "Mare Frigoris (Moon)",
+            "nameI18n": "lunar maria - Sea of Cold"
+        },
+        "{6b4ac985-8ac3-4c5d-a753-74aa2a94a90b}": {
+            "name": "M 23",
+            "nameI18n": "deep sky object - Messier 023, NGC 6494 (open cluster)"
+        },
+        "{6f7ae5a8-2a3d-4ff9-b903-cfcd4bf00622}": {
+            "name": "HIP 24608",
+            "nameI18n": "bright star - Capella"
+        },
+        "{7153a7a9-91a5-4975-8628-5a973e106da4}": {
+            "name": "(1) Ceres",
+            "nameI18n": "minor planet - (1) Ceres"
+        },
+        "{750939df-0ce6-48d0-abad-c375ae1d0504}": {
+            "name": "HIP 37279",
+            "nameI18n": "bright star - Procyon"
+        },
+        "{76051d37-20c8-4a4f-aa27-f7b0899c15fa}": {
+            "name": "HIP 32349",
+            "nameI18n": "bright star - Sirius"
+        },
+        "{76186bfd-f357-462e-ba04-9055f7ff5925}": {
+            "name": "HIP 91262",
+            "nameI18n": "bright star - Vega"
+        },
+        "{78c49602-230d-41d5-88b4-fd02366de019}": {
+            "name": "HIP 54061",
+            "nameI18n": "bright star - Dubhe"
+        },
+        "{79844b4d-0326-4e92-b0d5-2f73e912ca57}": {
+            "name": "M 31",
+            "nameI18n": "deep sky object - Messier 031, Andromeda Galaxy"
+        },
+        "{7d70c61f-a22c-4e94-834a-ac034d4bcf72}": {
+            "name": "HIP 92728",
+            "nameI18n": "double star - Delta 1-Delta 2 Lyr, Delta 1, 11 Lyr"
+        },
+        "{7f22d597-41a1-4da7-a97a-e4203de24a3b}": {
+            "name": "Venus",
+            "nameI18n": "solar system - Venus"
+        },
+        "{43bb8f3f-e7cb-4d85-8af5-86d59438eae5}": {
+            "name": "HIP 95947",
+            "nameI18n": "double star - Beta Cyg, Beta 1, Albireo"
+        },
+        "{8317dc2f-f53f-486d-8a33-391f8c0de12d}": {
+            "name": "Cygnus",
+            "nameI18n": "constellation - Cygnus (The Swan)"
+        },
+        "{85441e8e-b38b-408a-8ddc-8688fe9da120}": {
+            "name": "HIP 8903",
+            "nameI18n": "bright star - Sheratan"
+        },
+        "{85ae2e75-796d-48bd-b194-4eb487c64043}": {
+            "name": "HIP 102098",
+            "nameI18n": "bright star - Deneb"
+        },
+        "{87a0149e-f714-4055-8e3a-cfe564b9edc2}": {
+            "name": "M 44",
+            "nameI18n": "deep sky object - Messier 044, Beehive Cluster"
+        },
+        "{891f71b4-53c1-4846-ae5b-7c949473cf42}": {
+            "name": "Canes Venatici",
+            "nameI18n": "extra constellation - Canes Venatici"
+        },
+        "{89514e93-562b-4306-acee-1cb2e0f60e38}": {
+            "name": "Lyra",
+            "nameI18n": "constellation - Lyra (The Lyre or Harp)"
+        },
+        "{8a624719-ccff-4869-ba4f-6e07b43f31a3}": {
+            "name": "M 45",
+            "nameI18n": "deep sky object - Messier 045, Pleiades (open cluster)"
+        },
+        "{8c378d5f-9fcf-4ce4-953b-4ff933b96cfb}": {
+            "dec": "+35°03'59\"",
+            "isVisibleMarker": false,
+            "name": "Marker 1",
+            "nameI18n": "constellation - Hercules (Son of Zeus)",
+            "ra": "16h54m35.5s"
+        },
+        "{8ce1ddce-2f7b-4bce-8d42-75a566a92642}": {
+            "name": "M 24",
+            "nameI18n": "deep sky object - Messier 024, Small Sagittarius Star Cloud"
+        },
+        "{8d0ea122-5050-440f-8fad-c27ce173d03a}": {
+            "name": "Mare Vaporum (Moon)",
+            "nameI18n": "lunar maria - Sea of Vapors"
+        },
+        "{8f3567cd-aab9-49da-94c1-a2c777caabac}": {
+            "name": "Mare Fecunditatis (Moon)",
+            "nameI18n": "lunar maria - Sea of Fertility"
+        },
+        "{93526a8a-7401-4496-b71e-c2777e98e99a}": {
+            "name": "HIP 85819",
+            "nameI18n": "double star - Nu 1-Nu 2 Dra, Nu 1, Kuma, 24 Dra"
+        },
+        "{941935b7-4bb5-4b62-b688-f24cf551d380}": {
+            "name": "Cetus",
+            "nameI18n": "extra constellation - Cetus"
+        },
+        "{94bfccf1-5adb-4600-a36d-b31949b30f62}": {
+            "name": "Pegasus",
+            "nameI18n": "constellation - Pegasus (The Winged Horse)"
+        },
+        "{9522d58c-7063-455f-8e62-cc476bd61391}": {
+            "name": "HIP 677",
+            "nameI18n": "bright star - Alpheratz"
+        },
+        "{9649c7ca-072b-4e4f-b159-4fa7e20cb4da}": {
+            "name": "ISS (ZARYA)",
+            "nameI18n": "satellite - International Space Station"
+        },
+        "{96534413-d878-4fc6-b07a-5eb7e6b17377}": {
+            "name": "Leo",
+            "nameI18n": "constellation - Leo (The Lion)"
+        },
+        "{97868e75-4768-4f85-a50a-39638880bf1f}": {
+            "name": "Cr 399",
+            "nameI18n": "deep sky object - Collinder 399, Coathanger (asterism)"
+        },
+        "{97e4a0cd-d292-4919-946b-98e36ead2da3}": {
+            "name": "Clavius (crater, Moon)",
+            "nameI18n": "lunar impact crater - Clavius"
+        },
+        "{99ab7fba-bb0a-40e6-9e2a-210b98c58536}": {
+            "name": "HIP 72603",
+            "nameI18n": "bright star - Zubenelgenubi I"
+        },
+        "{99ab7fba-bb0a-40e6-9e2a-210b98c58536}": {
+            "name": "HIP 72603",
+            "nameI18n": "double star - Alpha 2-Alpha 1 Lib, Zubenelgenubi I"
+        },
+        "{9a13b5b1-e6d0-47a5-a7f0-28cd1a373806}": {
+            "name": "HIP 80763",
+            "nameI18n": "bright star - Antares"
+        },
+        "{9b725b70-c304-4340-a64b-11e0eb1768c4}": {
+            "name": "Puppis",
+            "nameI18n": "extra constellation - Puppis"
+        },
+        "{9c7a5934-4ba2-42de-93f2-abdcfba3da25}": {
+            "name": "Mars",
+            "nameI18n": "solar system - Mars"
+        },
+        "{a07db8d1-df37-4e4e-ae8d-c267168dd6f8}": {
+            "name": "Cr 256",
+            "nameI18n": "deep sky object - Melotte 111, Coma Berenices Cluster"
+        },
+        "{a1d625a6-5e59-4cd0-b207-0f275cfac233}": {
+            "name": "Canis Minor",
+            "nameI18n": "extra constellation - Canis Minor"
+        },
+        "{a4965053-26a5-4625-ae58-c47faeaafab0}": {
+            "name": "Quadrantids",
+            "nameI18n": "meteor shower - Quadrantids radiant"
+        },
+        "{a50952c0-725d-4d00-89a3-0ae9f6c89e2d}": {
+            "name": "HIP 113963",
+            "nameI18n": "bright star - Markab"
+        },
+        "{a9303fc8-8cdc-4353-b890-846f713b0690}": {
+            "name": "HIP 15863",
+            "nameI18n": "bright star - Mirfak"
+        },
+        "{1aa0d1e2-a686-4b98-bafa-6c667c2640c3}": {
+            "name": "HIP 100345",
+            "nameI18n": "double star - Beta 1-Beta 2 Cap, Beta 1, Dabih Major"
+        },
+        "{adb906a6-fc7c-41f4-8dfa-333fa5ba7304}": {
+            "name": "Geminids",
+            "nameI18n": "meteor shower - Geminids radiant"
+        },
+        "{adf6028b-524a-4ede-8dc7-efc7b6c8e0f6}": {
+            "name": "Gassendi (crater, Moon)",
+            "nameI18n": "lunar impact crater - Gassendi"
+        },
+        "{af730929-db20-4607-b566-76fd7e83c5ea}": {
+            "name": "Taurus",
+            "nameI18n": "constellation - Taurus (The Bull)"
+        },
+        "{b0e9898e-e5e9-437f-af6d-bf6e0e688b81}": {
+            "name": "HIP 10826",
+            "nameI18n": "variable star - Mira"
+        },
+        "{b1a62b11-0489-45bd-9803-517993f407df}": {
+            "name": "Ursa Minor",
+            "nameI18n": "constellation - Ursa Minor (The Lesser Bear)"
+        },
+        "{b3437427-2c6b-4e7f-a529-dfcd5b3ab2b7}": {
+            "name": "M 13",
+            "nameI18n": "deep sky object - Messier 013, Hercules Cluster"
+        },
+        "{b3d6b571-52e1-409c-a56a-b06eb051bc7b}": {
+            "name": "Neptune",
+            "nameI18n": "solar system - Neptune"
+        },
+        "{b4800767-3ba4-49a7-9e69-2fa6682d3eee}": {
+            "name": "Grimaldi (crater, Moon)",
+            "nameI18n": "lunar impact crater - Grimaldi"
+        },
+        "{b61dca79-b06e-4652-8fa2-a16328565982}": {
+            "name": "Gemini",
+            "nameI18n": "constellation - Gemini (The Twins)"
+        },
+        "{b68e22b4-81b3-4ea4-8949-c658b1e90efb}": {
+            "name": "Cassiopeia",
+            "nameI18n": "constellation - Cassiopeia (Queen of Ethiopia)"
+        },
+        "{b915573d-614a-44e4-a0c1-036808c484dc}": {
+            "name": "(3) Juno",
+            "nameI18n": "minor planet - (3) Juno"
+        },
+        "{b9ede5c5-8159-4e0f-92c7-cb4512a495fb}": {
+            "name": "Libra",
+            "nameI18n": "constellation - Libra (The Scales)"
+        },
+        "{ba69d06b-d561-4129-b980-1747a9e3cb2f}": {
+            "name": "HIP 69673",
+            "nameI18n": "bright star - Arcturus"
+        },
+        "{bc51ef87-b0f3-492f-98db-90a415b74032}": {
+            "name": "Sinus Iridum (Moon)",
+            "nameI18n": "lunar maria - Sinus Iridum"
+        },
+        "{bc6c3a62-d806-41ce-80b2-5d21842114f4}": {
+            "name": "HIP 3179",
+            "nameI18n": "bright star - Schedar, Shedar"
+        },
+        "{bd822f14-bfb7-4684-aede-95c037ecbf0a}": {
+            "name": "Cr 39",
+            "nameI18n": "deep sky object - Alpha Persei Cluster, Melotte 20"
+        },
+        "{bf951475-edde-4f58-9726-78c5f00e782e}": {
+            "name": "HIP 92855",
+            "nameI18n": "bright star - Nunki"
+        },
+        "{c03d25c2-0cc3-4756-80ed-829caf5d7365}": {
+            "name": "Perseids",
+            "nameI18n": "meteor shower - Perseids radiant"
+        },
+        "{c7d53960-54b9-408f-87d9-760498c6b3de}": {
+            "name": "HIP 81292",
+            "nameI18n": "double star - 17-16 Dra, 17 Dra"
+        },
+        "{c8a1713c-95a4-4c51-9e4f-a1c33da961a2}": {
+            "name": "Plato (crater, Moon)",
+            "nameI18n": "lunar impact crater - Plato"
+        },
+        "{c94857e6-dba3-4440-b6c8-7321347d186f}": {
+            "name": "HIP 84345",
+            "nameI18n": "bright star - Rasalgethi"
+        },
+        "{cc062a7e-2bc0-4d8f-afb2-2051cf20b6e4}": {
+            "name": "Scutum",
+            "nameI18n": "extra constellation - Scutum"
+        },
+        "{cd9e318f-6003-4dd9-97e6-2d3ac51bf95a}": {
+            "name": "HIP 65378",
+            "nameI18n": "double star - Zeta-80, Mizar (and Alcor)"
+        },
+        "{cdf2547a-d171-4b11-a2ca-b53354282249}": {
+            "name": "Uranus",
+            "nameI18n": "solar system - Uranus"
+        },
+        "{cf3fbbe1-e1a5-48e4-b80e-9a8af66cf1e9}": {
+            "name": "Serpens",
+            "nameI18n": "extra constellation - Serpens"
+        },
+        "{d064ff38-a4e5-4c58-b2e0-5517bc0acbcc}": {
+            "name": "η-Aquariids",
+            "nameI18n": "meteor shower - Eta-Aquariids radiant"
+        },
+        "{d1dc787a-c18d-4014-b7a5-18d284b0d18d}": {
+            "name": "HIP 99675",
+            "nameI18n": "double star - Omicron 1 Cyg, 31 Cyg"
+        },
+        "{d3a2dc20-ada8-41da-b609-2831257cf383}": {
+            "name": "Mare Nectaris (Moon)",
+            "nameI18n": "lunar maria - Sea of Nectar"
+        },
+        "{d5920f5e-dc81-4df5-814a-2fa1576d9a58}": {
+            "name": "HIP 96895",
+            "nameI18n": "double star - 16 Cyg"
+        },
+        "{d59faa51-15d8-4c6c-bcba-1db54d204e93}": {
+            "name": "Auriga",
+            "nameI18n": "constellation - Auriga (The Charioteer)"
+        },
+        "{51ce7c6f-4b91-48f4-a640-3e9b7713bf38}": {
+            "name": "HIP 20885",
+            "nameI18n": "double star - Theta 1-Theta 2 Tau, Theta 1, Hyadum III"
+        },
+        "{d659c377-9c90-44ff-a02d-f1b3d67dfeac}": {
+            "name": "HIP 74785",
+            "nameI18n": "bright star - Zubeneschamali"
+        },
+        "{d9ef75e1-bfab-4d44-971d-a79199ad5ce1}": {
+            "name": "Perseus",
+            "nameI18n": "constellation - Perseus (Greek Hero)"
+        },
+        "{db479457-703d-4a45-a7c7-43d74e375c4f}": {
+            "name": "Sagittarius",
+            "nameI18n": "constellation - Sagittarius (The Archer)"
+        },
+        "{dbb5ac07-e956-4f9e-a019-99c4a70e545f}": {
+            "name": "Petavius (crater, Moon)",
+            "nameI18n": "lunar impact crater - Petavius"
+        },
+        "{dc0463fb-9a97-4a13-bb93-920a3c34e5f4}": {
+            "name": "C 41",
+            "nameI18n": "deep sky object - Hyades, Melotte 25 (open cluster)"
+        },
+        "{dd32dc66-68c8-424c-b3e2-6817f5671952}": {
+            "name": "Mare Humorum (Moon)",
+            "nameI18n": "lunar maria - Sea of Moisture"
+        },
+        "{e0386e91-48da-461f-839f-ba8dd4bb4400}": {
+            "name": "HIP 91971",
+            "nameI18n": "double star - Zeta 1-Zeta 2 Lyr, Zeta 1, Nasr Alwaki I"
+        },
+        "{e07d3052-ed9a-418b-acf8-324192ff35c6}": {
+            "name": "(4) Vesta",
+            "nameI18n": "minor planet - (4) Vesta"
+        },
+        "{e67c6568-e1b0-4395-93b2-6dc2be06060a}": {
+            "name": "Mercury",
+            "nameI18n": "solar system - Mercury"
+        },
+        "{e7b75553-c0c6-416a-bd7b-7a1ef9e5aa73}": {
+            "name": "HIP 57632",
+            "nameI18n": "bright star - Denebola"
+        },
+        "{e9f06f43-b2ce-415b-b99f-d4b37c03c0dc}": {
+            "name": "HIP 36850",
+            "nameI18n": "bright star - Castor"
+        },
+        "{eb8aa1e9-c686-42e1-9999-048b9e51e695}": {
+            "name": "HIP 100064",
+            "nameI18n": "bright star - Algedi"
+        },
+        "{eb8aa1e9-c686-42e1-9999-048b9e51e695}": {
+            "name": "HIP 100064",
+            "nameI18n": "double star - Alpha 1-Alpha 2 Cap, Alpha 2, Algedi"
+        },
+        "{ebf1beae-6a2c-4c0e-a66a-b34edc2e3de0}": {
+            "name": "C 14",
+            "nameI18n": "deep sky object - Double Cluster, NGCs 869 and 884"
+        },
+        "{ecf72140-6920-49b6-9605-cbd63eee92b1}": {
+            "name": "Sun",
+            "nameI18n": "solar system - Sun (CAUTION!)"
+        },
+        "{edbca3e9-0c72-41dd-a9da-f12a5bbf0e85}": {
+            "name": "HIP 21421",
+            "nameI18n": "bright star - Aldebaran"
+        },
+        "{edddbad7-a715-4333-aed2-85536d652f93}": {
+            "name": "HIP 24436",
+            "nameI18n": "bright star - Rigel"
+        },
+        "{eef5af6c-8be5-4dde-8f0d-d65471830f27}": {
+            "name": "Coma Berenices",
+            "nameI18n": "extra constellation - Coma Berenices"
+        },
+        "{f11d60b4-321d-45cc-94f1-04c298c2adf0}": {
+            "name": "Vulpecula",
+            "nameI18n": "extra constellation - Vulpecula"
+        },
+        "{f17bfa23-dae1-46a6-b7cf-7d3e8daed0ea}": {
+            "name": "HIP 36188",
+            "nameI18n": "bright star - Gomeisa"
+        },
+        "{f27edf4e-5f34-4400-995f-f950552197a8}": {
+            "name": "Aquila",
+            "nameI18n": "constellation - Aquila (The Eagle)"
+        },
+        "{f4aa82f4-ff05-4e0a-8b32-3af1d2ae857c}": {
+            "name": "Mare Crisium (Moon)",
+            "nameI18n": "lunar maria - Sea of Crises"
+        },
+        "{f5a4666e-9df1-4df0-8ac1-60ed98fcdf68}": {
+            "name": "Cleomedes (crater, Moon)",
+            "nameI18n": "lunar impact crater - Cleomedes"
+        },
+        "{f6c383a8-cfef-4a54-80c3-1ba06a6fdf82}": {
+            "name": "(2) Pallas",
+            "nameI18n": "minor planet - (2) Pallas"
+        },
+        "{fb83824e-c792-4d8f-912b-bb37691d3730}": {
+            "name": "Moon",
+            "nameI18n": "solar system - Moon"
+        },
+        "{fe5755ea-21d4-48fc-bb39-d99c7a4162b3}": {
+            "name": "M 16",
+            "nameI18n": "deep sky object - Messier 016, Eagle Nebula"
+        },
+        "{ffea8d06-8aac-4d4a-b23d-bfff2d141294}": {
+            "name": "Copernicus (crater, Moon)",
+            "nameI18n": "lunar impact crater - Copernicus"
+        }
+    }
+}
