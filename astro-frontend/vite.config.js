@@ -25,6 +25,13 @@ export default defineConfig(() => ({
     },
   },
   server: {
+    proxy: {
+      '/login': { // Proxy requests to /login to your backend
+        target: 'http://localhost:5000',
+        changeOrigin: true, // Required for CORS in some cases
+        // rewrite: (path) => path.replace(/^\/api/, ''), // Optional: remove the /api prefix
+      },
+    },
     host: '0.0.0.0', // 👈 listen on all network interfaces
   },
 }));

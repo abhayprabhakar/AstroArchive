@@ -28,7 +28,7 @@ const FormGrid = styled(Grid)(() => ({
 export default function celestialObjectDetails() {
     const [selectedObject, setSelectedObject] = useState('');
     const [objectTypes, setObjectTypes] = useState([
-        'Black Holes',
+        'Black Hole',
         'Galaxy',
         'Nebula',
         'Quasar',

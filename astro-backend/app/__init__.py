@@ -25,6 +25,8 @@ def create_app():
 
     from .routes import bp
     app.register_blueprint(bp)
+    from api import api_bp  # Import the api blueprint
+    app.register_blueprint(api_bp, url_prefix='/api')
     from .models import User, CelestialObject, Gear, Location, Session, Image, ImageObject, ImageGear, ImageSession, ProcessingLog, FrameSummary, FrameSet, RawFrame
     # Register model views
     admin = Admin(app, name='Astrophotography Admin Panel', template_mode='bootstrap3')

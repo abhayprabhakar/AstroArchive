@@ -12,6 +12,7 @@ import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
 import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
+import Images from './components/Images'
 import ImageDetails from './components/ImageDetails';
 import CelestialObjectDetails from './components/CelestialObjectsDetails';
 import Info from './components/Info';
@@ -21,26 +22,94 @@ import Review from './components/Review';
 import SitemarkIcon from './components/SitemarkIcon';
 import AppTheme from '../shared-theme/AppTheme';
 import ColorModeIconDropdown from '../shared-theme/ColorModeIconDropdown';
+import {useState} from 'react';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
-const steps = ['Image Details', 'Celestial Object details', 'Payment details', 'Review your order'];
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return <ImageDetails />;
-    case 1:
-      return <CelestialObjectDetails />;
-    case 2:
-      return <PaymentForm />;
-    case 3:
-      return <Review />;
-    default:
-      throw new Error('Unknown step');
-  }
-}
+const steps = ['Image Upload', 'Image Details', 'Payment details'];
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 export default function Checkout(props) {
+  const [formData, setFormData] = useState({});
   const [activeStep, setActiveStep] = React.useState(0);
+  const [isImagesValid, setIsImagesValid] = React.useState(false);
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  const handleImageDetailsChange = (imageDetails) => {
+    setFormData((prevData) => ({ ...prevData, images: imageDetails }));
+  };
+  const handleImagesValidChange = (isValid) => {
+    setIsImagesValid(isValid);
+  };
+  function getStepContent(step) {
+    switch (step) {
+      case 0:
+        return <Images onImageDetailsChange={handleImageDetailsChange} initialImageDetails={formData.images} onIsValidChange={handleImagesValidChange}/>;
+      case 1:
+        return <ImageDetails />;
+      case 2:
+        return <PaymentForm />;
+      case 3:
+        return <Review />;
+      default:
+        throw new Error('Unknown step');
+    }
+  }
+
+  
   const handleNext = () => {
+    if (activeStep === 0 && !isImagesValid) {
+      setOpenSnackbar(true); // Open the snackbar
+      return;
+    }
     setActiveStep(activeStep + 1);
+  };
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
+  const handleSubmit = async () => {
+    console.log('Final Form Data:', formData);
+
+    const formDataToSend = new FormData();
+    for (const key in formData.images) {
+      if (formData.images[key]) {
+        if (Array.isArray(formData.images[key])) {
+          formData.images[key].forEach((file) => {
+            formDataToSend.append(key, file);
+          });
+        } else {
+          formDataToSend.append(key, formData.images[key]);
+        }
+      }
+    }
+
+    // Add other form data to formDataToSend if needed
+    // formDataToSend.append('otherField', formData.otherField);
+
+    try {
+      const response = await fetch('http://localhost:5000/api/upload-image', {
+        method: 'POST',
+        body: formDataToSend,
+        // If you're sending JSON for other parts, you might need to adjust headers
+        // headers: {
+        //   'Content-Type': 'application/json',
+        // },
+      });
+
+      if (response.ok) {
+        console.log('Data and images uploaded successfully!');
+      } else {
+        console.error('Error uploading data and images:', response);
+      }
+    } catch (error) {
+      console.error('Network error:', error);
+    }
   };
   const handleBack = () => {
     setActiveStep(activeStep - 1);
@@ -65,24 +134,7 @@ export default function Checkout(props) {
           },
         }}
       >
-        {/* <Grid
-  item
-  xs={12}
-  sm={5}
-  lg={4}
-  sx={{
-    display: { xs: 'none', md: 'flex' },
-    flexDirection: 'column',
-    backgroundColor: 'background.paper',
-    borderRight: { sm: 'none', md: '1px solid' },
-    borderColor: { sm: 'none', md: 'divider' },
-    alignItems: 'flex-start',
-    pt: 16,
-    px: 10,
-    gap: 4,
-  }}
->
-</Grid> */}
+        
 
 <Grid
   item
@@ -209,18 +261,16 @@ export default function Checkout(props) {
             </Stepper>
             {activeStep === steps.length ? (
               <Stack spacing={2} useFlexGap>
-                <Typography variant="h1">📦</Typography>
-                <Typography variant="h5">Thank you for your order!</Typography>
+                <Typography variant="h1">📷</Typography>
+                <Typography variant="h5">Thank you for uploading your Work!</Typography>
                 <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-                  Your order number is
-                  <strong>&nbsp;#140396</strong>. We have emailed your order
-                  confirmation and will update you once its shipped.
+                  Your work has been uploaded successfully into the database. Please contact adminstrator if there are any issues.
                 </Typography>
                 <Button
                   variant="contained"
                   sx={{ alignSelf: 'start', width: { xs: '100%', sm: 'auto' } }}
                 >
-                  Go to my orders
+                  Go to my work
                 </Button>
               </Stack>
             ) : (
@@ -236,7 +286,7 @@ export default function Checkout(props) {
                       gap: 1,
                       pb: { xs: 12, sm: 0 },
                       mt: { xs: 2, sm: 0 },
-                      mb: '60px',
+                      mb: '80px',
                     },
                     activeStep !== 0
                       ? { justifyContent: 'space-between' }
@@ -267,10 +317,14 @@ export default function Checkout(props) {
                   <Button
                     variant="contained"
                     endIcon={<ChevronRightRoundedIcon />}
-                    onClick={handleNext}
+                    onClick={
+                      activeStep === steps.length - 1
+                        ? handleSubmit
+                        : handleNext
+                    }
                     sx={{ width: { xs: '100%', sm: 'fit-content' } }}
                   >
-                    {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
+                    {activeStep === steps.length - 1 ? 'Submit your work' : 'Next'}
                   </Button>
                 </Box>
               </React.Fragment>
@@ -278,6 +332,16 @@ export default function Checkout(props) {
           </Box>
         </Grid>
       </Grid>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={5000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
+          Please upload a main observation image to continue.
+        </Alert>
+      </Snackbar>
     </AppTheme>
   );
 }
