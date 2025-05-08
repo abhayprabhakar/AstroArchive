@@ -10,6 +10,7 @@ from .models import *
 from sqlalchemy import or_
 from datetime import datetime, timedelta
 from flask import current_app
+import uuid
 
 
 bp = Blueprint('main', __name__)
@@ -66,6 +67,7 @@ def register():
 
     hashed_password = User.hash_password(data['password'])
     new_user = User(
+        user_id=str(uuid.uuid4()),
         username=data['username'],
         email=data['email'],
         password_hash=hashed_password,

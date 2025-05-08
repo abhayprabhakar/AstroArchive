@@ -68,7 +68,7 @@ export default function AppAppBar() {
               <Button variant="text" color="info" size="small">
                 Your Work
               </Button>
-              <Button variant="text" color="info" size="small">
+              <Button onClick={() => navigate('/checkout')} variant="text" color="info" size="small">
                 Upload
               </Button>
               <Button variant="text" color="info" size="small" sx={{ minWidth: 0 }}>

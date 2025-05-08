@@ -12,6 +12,18 @@ db = SQLAlchemy()
 migrate = Migrate()
 
 
+# Custom ModelView class that shows all columns, including primary and foreign keys
+class EnhancedModelView(ModelView):
+    column_display_pk = True  # Display primary key columns
+    column_display_all_relations = True  # Show all relations
+    column_list = None  # Will be set to all columns in the model during initialization
+    
+    def __init__(self, model, session, **kwargs):
+        # Get all column names from the model
+        self.column_list = [column.key for column in model.__table__.columns]
+        super(EnhancedModelView, self).__init__(model, session, **kwargs)
+
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
@@ -31,19 +43,19 @@ def create_app():
     # Register model views
     admin = Admin(app, name='Astrophotography Admin Panel', template_mode='bootstrap3')
 
-    # Add views for each model
-    admin.add_view(ModelView(User, db.session))
-    admin.add_view(ModelView(CelestialObject, db.session))
-    admin.add_view(ModelView(Gear, db.session))
-    admin.add_view(ModelView(Location, db.session))
-    admin.add_view(ModelView(Session, db.session))
-    admin.add_view(ModelView(Image, db.session))
-    admin.add_view(ModelView(ImageObject, db.session))
-    admin.add_view(ModelView(ImageGear, db.session))
-    admin.add_view(ModelView(ImageSession, db.session))
-    admin.add_view(ModelView(ProcessingLog, db.session))
-    admin.add_view(ModelView(FrameSummary, db.session))
-    admin.add_view(ModelView(FrameSet, db.session))
-    admin.add_view(ModelView(RawFrame, db.session))
+    # Add enhanced views for each model that show all columns including PKs and FKs
+    admin.add_view(EnhancedModelView(User, db.session))
+    admin.add_view(EnhancedModelView(CelestialObject, db.session))
+    admin.add_view(EnhancedModelView(Gear, db.session))
+    admin.add_view(EnhancedModelView(Location, db.session))
+    admin.add_view(EnhancedModelView(Session, db.session))
+    admin.add_view(EnhancedModelView(Image, db.session))
+    admin.add_view(EnhancedModelView(ImageObject, db.session))
+    admin.add_view(EnhancedModelView(ImageGear, db.session))
+    admin.add_view(EnhancedModelView(ImageSession, db.session))
+    admin.add_view(EnhancedModelView(ProcessingLog, db.session))
+    admin.add_view(EnhancedModelView(FrameSummary, db.session))
+    admin.add_view(EnhancedModelView(FrameSet, db.session))
+    admin.add_view(EnhancedModelView(RawFrame, db.session))
 
     return app

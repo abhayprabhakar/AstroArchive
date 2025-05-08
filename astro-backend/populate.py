@@ -13,7 +13,7 @@ from config import Config
 #    -  Or, if you're using PostgreSQL:
 # engine = create_engine('postgresql://your_user:your_password@your_host/your_database') #Change this
 # Use the connection string from the Config class
-engine = create_engine(Config.SQLALCHEMY_DATABASE_URI)
+engine = create_engine('sqlite:///instance/astro_catalog.db')
 
 # 2.  Create the database tables.
 #     -  This is crucial.  It ensures that the tables defined in your models.py

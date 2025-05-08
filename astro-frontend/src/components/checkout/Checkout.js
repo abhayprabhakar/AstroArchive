@@ -14,6 +14,9 @@ import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import Images from './components/Images'
 import ImageDetails from './components/ImageDetails';
+import SessionDetails from './components/SessionDetials'
+import LocationDetails from './components/LocationDetails';
+import GearDetails from './components/GearDetails'; // Import the GearDetails component
 import CelestialObjectDetails from './components/CelestialObjectsDetails';
 import Info from './components/Info';
 import InfoMobile from './components/InfoMobile';
@@ -26,7 +29,8 @@ import {useState} from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
-const steps = ['Image Upload', 'Image Details', 'Payment details'];
+// Update steps to include Gear Details
+const steps = ['Image Upload', 'Image Details', 'Location details', 'Gear details', 'Session details'];
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -36,36 +40,135 @@ export default function Checkout(props) {
   const [formData, setFormData] = useState({});
   const [activeStep, setActiveStep] = React.useState(0);
   const [isImagesValid, setIsImagesValid] = React.useState(false);
+  const [isImageDetailsValid, setIsImageDetailsValid] = React.useState(false);
+  const [isSessionDetailsValid, setIsSessionDetailsValid] = React.useState(false);
+  const [isGearDetailsValid, setIsGearDetailsValid] = React.useState(false); // Add gear validation state
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = React.useState('info');
+  
+  // Handler for image upload step
   const handleImageDetailsChange = (imageDetails) => {
     setFormData((prevData) => ({ ...prevData, images: imageDetails }));
   };
+
+  const handleSessionDetailsChange = (sessionData) => {
+    setFormData((prevData) => ({...prevData, sessionDetails: sessionData}))
+  }
+
+  const handleLocationDetailsChange = (locationData) => {
+    setFormData((prevData) => ({...prevData, locationDetails: locationData}))
+  }
+  
+  // Handler for gear details change
+  const handleGearDetailsChange = (gearData) => {
+    setFormData((prevData) => ({...prevData, gearDetails: gearData}));
+    // Update the validity state based on the isValid property from GearDetails
+    setIsGearDetailsValid(gearData.isValid);
+  }
+  
+  // Handler for image details step
+  const handleFormDataChange = (detailsData) => {
+    setFormData((prevData) => ({ ...prevData, imageDetails: detailsData }));
+    // Update the validity state based on the isValid property from ImageDetails
+    setIsImageDetailsValid(detailsData.isValid);
+  };
+  
   const handleImagesValidChange = (isValid) => {
     setIsImagesValid(isValid);
   };
+  
   function getStepContent(step) {
     switch (step) {
       case 0:
-        return <Images onImageDetailsChange={handleImageDetailsChange} initialImageDetails={formData.images} onIsValidChange={handleImagesValidChange}/>;
+        return <Images 
+          onImageDetailsChange={handleImageDetailsChange} 
+          initialImageDetails={formData.images} 
+          onIsValidChange={handleImagesValidChange}
+        />;
       case 1:
-        return <ImageDetails />;
+        return <ImageDetails 
+          onFormDataChange={handleFormDataChange}
+          initialData={formData.imageDetails} 
+        />;
       case 2:
-        return <PaymentForm />;
+        return <LocationDetails
+          onFormDataChange={handleLocationDetailsChange}
+          initialData={formData.locationDetails}
+        />;
       case 3:
+        return <GearDetails 
+          onFormDataChange={handleGearDetailsChange}
+          initialData={formData.gearDetails}
+          selectedImageId={formData.imageDetails?.image_id} // Pass image_id if available
+        />;
+      case 4:
+        return <SessionDetails 
+          onFormDataChange={handleSessionDetailsChange}
+          initialData={formData.sessionData}
+        />;
+      case 5:
         return <Review />;
       default:
         throw new Error('Unknown step');
     }
   }
 
-  
   const handleNext = () => {
+    // Validation for the first step
     if (activeStep === 0 && !isImagesValid) {
-      setOpenSnackbar(true); // Open the snackbar
+      setSnackbarMessage('Please upload a main observation image to continue.');
+      setSnackbarSeverity('info');
+      setOpenSnackbar(true);
       return;
     }
+    
+    // Validation for image details step
+    if (activeStep === 1) {
+      // Check if image details are valid
+      if (!isImageDetailsValid) {
+        setSnackbarMessage('Please fill in all required fields in Image Details to continue.');
+        setSnackbarSeverity('info');
+        setOpenSnackbar(true);
+        return;
+      }
+      
+      // Show success message for valid submission
+      setSnackbarMessage('Image details saved successfully!');
+      setSnackbarSeverity('success');
+      setOpenSnackbar(true);
+    }
+    
+    if (activeStep === 2) {
+      if (!formData.locationDetails || !formData.locationDetails.location_id) {
+        setSnackbarMessage('Please select or create a location to continue.');
+        setSnackbarSeverity('info');
+        setOpenSnackbar(true);
+        return;
+      }
+      
+      setSnackbarMessage('Location details saved successfully!');
+      setSnackbarSeverity('success');
+      setOpenSnackbar(true);
+    }
+    
+    // Add validation for gear details step
+    if (activeStep === 3) {
+      if (!isGearDetailsValid) {
+        setSnackbarMessage('Please add at least one equipment item to continue.');
+        setSnackbarSeverity('info');
+        setOpenSnackbar(true);
+        return;
+      }
+      
+      setSnackbarMessage('Gear details saved successfully!');
+      setSnackbarSeverity('success');
+      setOpenSnackbar(true);
+    }
+    
     setActiveStep(activeStep + 1);
   };
+  
   const handleCloseSnackbar = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -77,43 +180,81 @@ export default function Checkout(props) {
     console.log('Final Form Data:', formData);
 
     const formDataToSend = new FormData();
-    for (const key in formData.images) {
-      if (formData.images[key]) {
-        if (Array.isArray(formData.images[key])) {
-          formData.images[key].forEach((file) => {
-            formDataToSend.append(key, file);
-          });
-        } else {
-          formDataToSend.append(key, formData.images[key]);
+    
+    // Add image files
+    if (formData.images) {
+      for (const key in formData.images) {
+        if (formData.images[key]) {
+          if (Array.isArray(formData.images[key])) {
+            formData.images[key].forEach((file) => {
+              formDataToSend.append(`images.${key}`, file);
+            });
+          } else {
+            formDataToSend.append(`images.${key}`, formData.images[key]);
+          }
         }
       }
     }
 
-    // Add other form data to formDataToSend if needed
-    // formDataToSend.append('otherField', formData.otherField);
+    // Add image details (excluding the isValid property)
+    if (formData.imageDetails) {
+      const { isValid, ...imageDetailsToSend } = formData.imageDetails;
+      for (const key in imageDetailsToSend) {
+        formDataToSend.append(`imageDetails.${key}`, imageDetailsToSend[key]);
+      }
+    }
+    
+    if (formData.locationDetails) {
+      for (const key in formData.locationDetails) {
+        formDataToSend.append(`locationDetails.${key}`, formData.locationDetails[key]);
+      }
+    }
+    
+    // Add gear details
+    if (formData.gearDetails) {
+      const { isValid, selectedGear } = formData.gearDetails;
+      // Add selected gear as JSON string
+      formDataToSend.append('gearDetails.selectedGear', JSON.stringify(selectedGear));
+    }
+  
+    // Add session details if they exist
+    if (formData.sessionDetails) {
+      for (const key in formData.sessionDetails) {
+        formDataToSend.append(`sessionDetails.${key}`, formData.sessionDetails[key]);
+      }
+    }
 
     try {
       const response = await fetch('http://localhost:5000/api/upload-image', {
         method: 'POST',
         body: formDataToSend,
-        // If you're sending JSON for other parts, you might need to adjust headers
-        // headers: {
-        //   'Content-Type': 'application/json',
-        // },
       });
 
       if (response.ok) {
         console.log('Data and images uploaded successfully!');
+        // You might want to show a success message here
+        setSnackbarMessage('Your work has been uploaded successfully!');
+        setSnackbarSeverity('success');
+        setOpenSnackbar(true);
       } else {
         console.error('Error uploading data and images:', response);
+        // Show error message
+        setSnackbarMessage('Error uploading your work. Please try again.');
+        setSnackbarSeverity('info');
+        setOpenSnackbar(true);
       }
     } catch (error) {
       console.error('Network error:', error);
+      setSnackbarMessage('Network error. Please check your connection and try again.');
+      setSnackbarSeverity('info');
+      setOpenSnackbar(true);
     }
   };
+  
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
+  
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
@@ -338,8 +479,8 @@ export default function Checkout(props) {
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
-          Please upload a main observation image to continue.
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+          {snackbarMessage}
         </Alert>
       </Snackbar>
     </AppTheme>

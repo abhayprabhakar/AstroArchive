@@ -1,0 +1,352 @@
+[
+    {
+      "type": "Cameras",
+      "brands": [
+        {
+          "brand": "Sony",
+          "models": [
+            "Sony A7R IV",
+            "Sony A7S III",
+            "Sony A7 III",
+            "Sony A7R V",
+            "Sony A9 II",
+            "Sony A7C",
+            "Sony A6600",
+            "Sony A7S II",
+            "Sony A7R III",
+            "Sony ZV-E10"
+          ]
+        },
+        {
+          "brand": "Canon",
+          "models": [
+            "Canon EOS R",
+            "Canon EOS Ra",
+            "Canon EOS 800D",
+            "Canon EOS R5",
+            "Canon EOS 6D Mark II",
+            "Canon EOS R6",
+            "Canon EOS 90D",
+            "Canon EOS 5D Mark IV",
+            "Canon EOS M50 Mark II",
+            "Canon EOS R7"
+          ]
+        },
+        {
+          "brand": "Nikon",
+          "models": [
+            "Nikon D850",
+            "Nikon D810A",
+            "Nikon Z6 II",
+            "Nikon D780",
+            "Nikon Z7 II",
+            "Nikon Z5",
+            "Nikon D750",
+            "Nikon Z50",
+            "Nikon D5600",
+            "Nikon Z8"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Lenses",
+      "brands": [
+        {
+          "brand": "Tamron",
+          "models": [
+            "Tamron 15-30mm f/2.8 G2",
+            "Tamron 17-28mm f/2.8 Di III",
+            "Tamron 28-75mm f/2.8 Di III",
+            "Tamron 70-180mm f/2.8 Di III",
+            "Tamron 11-20mm f/2.8 Di III-A",
+            "Tamron 35mm f/1.4 Di",
+            "Tamron 24mm f/2.8 Di III",
+            "Tamron 20mm f/2.8 Di III",
+            "Tamron 85mm f/1.8 Di VC",
+            "Tamron 10-24mm f/3.5-4.5 Di II"
+          ]
+        },
+        {
+          "brand": "Sigma",
+          "models": [
+            "Sigma 14-24mm f/2.8",
+            "Sigma 150-600mm f/5-6.3",
+            "Sigma 24mm f/1.4 Art",
+            "Sigma 35mm f/1.4 Art",
+            "Sigma 50mm f/1.4 Art",
+            "Sigma 20mm f/1.4 Art",
+            "Sigma 105mm f/2.8 Macro",
+            "Sigma 18-35mm f/1.8 Art",
+            "Sigma 70-200mm f/2.8 Sports",
+            "Sigma 14mm f/1.8 Art"
+          ]
+        },
+        {
+          "brand": "Rokinon",
+          "models": [
+            "Rokinon 14mm f/2.8",
+            "Rokinon 24mm f/1.4",
+            "Rokinon 35mm f/1.4",
+            "Rokinon 85mm f/1.4",
+            "Rokinon 12mm f/2.0",
+            "Rokinon 50mm f/1.4",
+            "Rokinon 16mm f/2.0",
+            "Rokinon 135mm f/2.0",
+            "Rokinon 20mm f/1.8",
+            "Rokinon 8mm f/2.8 Fisheye"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Telescopes",
+      "brands": [
+        {
+          "brand": "William Optics",
+          "models": [
+            "William Optics RedCat 51",
+            "William Optics ZenithStar 73",
+            "William Optics Gran Turismo 81",
+            "William Optics Fluorostar 91",
+            "William Optics SpaceCat 51",
+            "William Optics WhiteCat 51",
+            "William Optics Pleiades 68",
+            "William Optics Star 71",
+            "William Optics APO 70mm",
+            "William Optics RedCat 71"
+          ]
+        },
+        {
+          "brand": "Celestron",
+          "models": [
+            "Celestron Edge HD 11",
+            "Celestron NexStar 8SE",
+            "Celestron CPC 1100",
+            "Celestron RASA 8",
+            "Celestron Omni XLT 120",
+            "Celestron AstroMaster 130EQ",
+            "Celestron PowerSeeker 127EQ",
+            "Celestron Advanced VX 8",
+            "Celestron CGX 925",
+            "Celestron SkyProdigy 130"
+          ]
+        },
+        {
+          "brand": "Sky-Watcher",
+          "models": [
+            "Sky-Watcher Esprit 100ED",
+            "Sky-Watcher Evostar 80ED",
+            "Sky-Watcher Quattro 250P",
+            "Sky-Watcher Skyliner 200P",
+            "Sky-Watcher Startravel 120",
+            "Sky-Watcher Heritage 130P",
+            "Sky-Watcher Evostar 120ED",
+            "Sky-Watcher Flextube 250P",
+            "Sky-Watcher ProED 100",
+            "Sky-Watcher Esprit 80ED"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Mounts",
+      "brands": [
+        {
+          "brand": "Sky-Watcher",
+          "models": [
+            "Sky-Watcher EQ6-R Pro",
+            "Sky-Watcher Star Adventurer",
+            "Sky-Watcher EQ8-R Pro",
+            "Sky-Watcher HEQ5 Pro",
+            "Sky-Watcher AZ-GTi",
+            "Sky-Watcher Star Adventurer Mini",
+            "Sky-Watcher EQM-35",
+            "Sky-Watcher AZ-EQ6",
+            "Sky-Watcher EQ3 Pro",
+            "Sky-Watcher AZ5"
+          ]
+        },
+        {
+          "brand": "iOptron",
+          "models": [
+            "iOptron CEM40",
+            "iOptron GEM45",
+            "iOptron SkyGuider Pro",
+            "iOptron CEM70",
+            "iOptron HAE29",
+            "iOptron SkyHunter",
+            "iOptron CEM120",
+            "iOptron AZ Mount Pro",
+            "iOptron SmartEQ Pro",
+            "iOptron MiniTower II"
+          ]
+        },
+        {
+          "brand": "Celestron",
+          "models": [
+            "Celestron Advanced VX",
+            "Celestron CGX Mount",
+            "Celestron CGEM II",
+            "Celestron AVX Mount",
+            "Celestron Omni CG-4",
+            "Celestron SkyProdigy Mount",
+            "Celestron CPC Deluxe HD",
+            "Celestron CGX-L",
+            "Celestron NexStar SLT",
+            "Celestron Astro Fi"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Tripods",
+      "brands": [
+        {
+          "brand": "Manfrotto",
+          "models": [
+            "Manfrotto Befree GT",
+            "Manfrotto 190XPRO4",
+            "Manfrotto Element MII",
+            "Manfrotto 055 Carbon Fiber",
+            "Manfrotto Compact Action",
+            "Manfrotto 290 Xtra",
+            "Manfrotto Pixi Evo",
+            "Manfrotto Nitrotech 608",
+            "Manfrotto MVH500AH Fluid Head",
+            "Manfrotto 504X Fluid Video Head"
+          ]
+        },
+        {
+          "brand": "Gitzo",
+          "models": [
+            "Gitzo Mountaineer Series 2",
+            "Gitzo Systematic Series 3",
+            "Gitzo Traveler Series 1",
+            "Gitzo Ocean Systematic",
+            "Gitzo Explorer Series 2",
+            "Gitzo Lightweight Series 1",
+            "Gitzo Mountaineer Series 0",
+            "Gitzo Systematic Series 5",
+            "Gitzo Traveler Series 2",
+            "Gitzo Mini Traveler"
+          ]
+        },
+        {
+          "brand": "Benro",
+          "models": [
+            "Benro Aero 4",
+            "Benro Mach3 TMA37AL",
+            "Benro Rhino 24C",
+            "Benro Adventure 3",
+            "Benro Slim Carbon",
+            "Benro GoPlus Travel",
+            "Benro Bat 24C",
+            "Benro Tortoise 24C",
+            "Benro MeFOTO GlobeTrotter",
+            "Benro Carbon Fiber C3780"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Accessories",
+      "brands": [
+        {
+          "brand": "ZWO",
+          "models": [
+            "ZWO ASIair Plus",
+            "ZWO EAF Electronic Focuser",
+            "ZWO OAG Off-Axis Guider",
+            "ZWO ASI120MM Mini",
+            "ZWO Filter Wheel",
+            "ZWO ADC Atmospheric Dispersion Corrector",
+            "ZWO ASI174MM",
+            "ZWO T2 Tilter",
+            "ZWO Mini Guide Scope",
+            "ZWO ASI290MM Mini"
+          ]
+        },
+        {
+          "brand": "Optolong",
+          "models": [
+            "Optolong L-eXtreme Filter",
+            "Optolong L-Pro Filter",
+            "Optolong L-Enhance Filter",
+            "Optolong UHC Filter",
+            "Optolong CLS Filter",
+            "Optolong H-Alpha 7nm",
+            "Optolong SII 6.5nm",
+            "Optolong OIII 6.5nm",
+            "Optolong Moon & Skyglow Filter",
+            "Optolong UV/IR Cut Filter"
+          ]
+        },
+        {
+          "brand": "Celestron",
+          "models": [
+            "Celestron Dew Heater Ring",
+            "Celestron SkyPortal WiFi Module",
+            "Celestron StarSense AutoAlign",
+            "Celestron Focus Motor",
+            "Celestron PowerTank Lithium",
+            "Celestron T-Adapter",
+            "Celestron Barlow Lens 2x",
+            "Celestron Eyepiece and Filter Kit",
+            "Celestron Skyris 132M",
+            "Celestron NexImage 10"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Software",
+      "brands": [
+        {
+          "brand": "Adobe",
+          "models": [
+            "Adobe Photoshop",
+            "Adobe Lightroom",
+            "Adobe Photoshop Elements",
+            "Adobe Premiere Pro",
+            "Adobe After Effects",
+            "Adobe Bridge",
+            "Adobe Camera Raw",
+            "Adobe Photoshop Express",
+            "Adobe Lightroom Classic",
+            "Adobe Creative Cloud"
+          ]
+        },
+        {
+          "brand": "Open Source",
+          "models": [
+            "Deep Sky Stacker",
+            "Sequator",
+            "Siril",
+            "GIMP",
+            "AstroTortilla",
+            "PIPP",
+            "RegiStax",
+            "AutoStakkert",
+            "Stellarium",
+            "KStars"
+          ]
+        },
+        {
+          "brand": "Photopills",
+          "models": [
+            "Photopills",
+            "Photopills Widgets",
+            "Photopills Academy",
+            "Photopills Planner",
+            "Photopills Night AR",
+            "Photopills Sun Module",
+            "Photopills Moon Module",
+            "Photopills Meteor Showers",
+            "Photopills Star Trails",
+            "Photopills Time Lapse"
+          ]
+        }
+      ]
+    }
+  ]
