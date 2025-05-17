@@ -36,6 +36,9 @@ def to_iso_timestamp(dt):
 
 
 
+
+
+
 api_bp = Blueprint('api', __name__)
 CORS(api_bp)
 
@@ -51,6 +54,314 @@ api_bp = Blueprint('api', __name__, url_prefix='/api')  # Define your blueprint
 def to_iso_timestamp(dt):
     if isinstance(dt, datetime):
         return dt.isoformat()
+    return None
+
+
+
+# Import necessary modules
+from flask import Flask, request, jsonify
+import os
+import uuid
+import json
+from werkzeug.utils import secure_filename
+
+# Assuming your Flask app is already created as 'app'
+# If not, create it with:
+# app = Flask(__name__)
+
+# Directory where chunks are temporarily stored
+TEMP_UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'temp_uploads')
+# Directory for final uploads
+FINAL_UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads')
+
+# Create directories if they don't exist
+os.makedirs(TEMP_UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(FINAL_UPLOAD_FOLDER, exist_ok=True)
+
+# Store information about active uploads
+active_uploads = {}
+
+@api_bp.route('/chunk-upload/init', methods=['POST'])
+@token_required
+def init_chunked_upload(current_user):
+    """Initialize a new chunked upload"""
+    data = request.json
+    
+    # Generate a unique upload ID
+    upload_id = str(uuid.uuid4())
+    
+    # Create a folder for this upload's chunks
+    upload_folder = os.path.join(TEMP_UPLOAD_FOLDER, upload_id)
+    os.makedirs(upload_folder, exist_ok=True)
+    
+    # Store upload information
+    active_uploads[upload_id] = {
+        'fileName': secure_filename(data.get('fileName')),
+        'fileSize': data.get('fileSize'),
+        'fileType': data.get('fileType'),
+        'uploadType': data.get('uploadType'),  # 'main-image', 'additional-image', 'documentation', etc.
+        'fileId': data.get('fileId'),
+        'totalChunks': data.get('totalChunks'),
+        'receivedChunks': 0,
+        'chunkFolder': upload_folder,
+        'isComplete': False
+    }
+    
+    return jsonify({
+        'uploadId': upload_id,
+        'status': 'initialized'
+    })
+
+@api_bp.route('/chunk-upload/chunk', methods=['POST'])
+@token_required
+def upload_chunk(current_user):
+    """Handle an individual chunk upload"""
+    upload_id = request.form.get('uploadId')
+    chunk_index = int(request.form.get('chunkIndex'))
+    
+    # Check if the upload exists
+    if upload_id not in active_uploads:
+        return jsonify({'error': 'Invalid upload ID'}), 400
+    
+    upload_info = active_uploads[upload_id]
+    
+    # Get the chunk file
+    if 'chunk' not in request.files:
+        return jsonify({'error': 'No chunk in request'}), 400
+    
+    chunk = request.files['chunk']
+    
+    # Save the chunk to disk
+    chunk_path = os.path.join(upload_info['chunkFolder'], f'chunk_{chunk_index}')
+    chunk.save(chunk_path)
+    
+    # Update received chunks count
+    upload_info['receivedChunks'] += 1
+    
+    return jsonify({
+        'status': 'chunk_received',
+        'chunkIndex': chunk_index,
+        'receivedChunks': upload_info['receivedChunks'],
+        'totalChunks': upload_info['totalChunks']
+    })
+
+@api_bp.route('/chunk-upload/complete', methods=['POST'])
+@token_required
+def complete_chunked_upload(current_user):
+    """Complete a chunked upload by combining all chunks"""
+    data = request.json
+    upload_id = data.get('uploadId')
+    
+    # Check if the upload exists
+    if upload_id not in active_uploads:
+        return jsonify({'error': 'Invalid upload ID'}), 400
+    
+    upload_info = active_uploads[upload_id]
+    
+    # Check if all chunks were received
+    if upload_info['receivedChunks'] != upload_info['totalChunks']:
+        return jsonify({
+            'error': 'Not all chunks received',
+            'receivedChunks': upload_info['receivedChunks'],
+            'totalChunks': upload_info['totalChunks']
+        }), 400
+    
+    # Create final destination folder based on upload type
+    type_folder = os.path.join(FINAL_UPLOAD_FOLDER, upload_info['uploadType'])
+    os.makedirs(type_folder, exist_ok=True)
+    
+    # Generate unique filename
+    base_filename = upload_info['fileName']
+    filename = f"{uuid.uuid4()}_{base_filename}"
+    file_path = os.path.join(type_folder, filename)
+    
+    # Combine all chunks into final file
+    with open(file_path, 'wb') as final_file:
+        for i in range(upload_info['totalChunks']):
+            chunk_path = os.path.join(upload_info['chunkFolder'], f'chunk_{i}')
+            with open(chunk_path, 'rb') as chunk_file:
+                final_file.write(chunk_file.read())
+    
+    # Update upload status
+    upload_info['isComplete'] = True
+    upload_info['finalPath'] = file_path
+    
+    # Return file path relative to FINAL_UPLOAD_FOLDER
+    relative_path = os.path.join(upload_info['uploadType'], filename)
+    
+    return jsonify({
+        'status': 'complete',
+        'filePath': relative_path,
+        'fileType': upload_info['uploadType'],
+        'fileId': upload_info['fileId']
+    })
+
+@api_bp.route('/finalize-upload', methods=['POST'])
+@token_required
+def finalize_upload(current_user):
+    """Handle the final form submission with metadata and small files"""
+    # Extract form data
+    form_data = request.form
+    files = request.files
+    
+    # Get chunked file paths
+    chunked_files = {}
+    for key in form_data:
+        if key.startswith('chunkedFiles[') and key.endswith(']'):
+            file_id = key[len('chunkedFiles['):-1]
+            chunked_files[file_id] = form_data[key]
+    
+    # Process metadata
+    image_details = {}
+    if 'imageDetails' in form_data:
+        try:
+            image_details = json.loads(form_data['imageDetails'])
+        except json.JSONDecodeError:
+            return jsonify({'error': 'Invalid image details format'}), 400
+    
+    location_details = {}
+    if 'locationDetails' in form_data:
+        try:
+            location_details = json.loads(form_data['locationDetails'])
+        except json.JSONDecodeError:
+            return jsonify({'error': 'Invalid location details format'}), 400
+    
+    gear_details = {}
+    if 'gearDetails.selectedGear' in form_data:
+        try:
+            gear_details = {
+                'selectedGear': json.loads(form_data['gearDetails.selectedGear'])
+            }
+        except json.JSONDecodeError:
+            return jsonify({'error': 'Invalid gear details format'}), 400
+    
+    session_details = {}
+    if 'sessionDetails' in form_data:
+        try:
+            session_details = json.loads(form_data['sessionDetails'])
+        except json.JSONDecodeError:
+            return jsonify({'error': 'Invalid session details format'}), 400
+    
+    # Handle small files (not uploaded in chunks)
+    small_files = {}
+    
+    # Main image
+    main_image_path = None
+    if 'images.mainImage' in files:
+        main_image = files['images.mainImage']
+        main_image_path = handle_small_file(main_image, 'main-image')
+        small_files['mainImage'] = main_image_path
+    
+    # Additional images
+    additional_images = []
+    for key in files:
+        if key.startswith('images.additionalImages[') and key.endswith(']'):
+            additional_image = files[key]
+            additional_image_path = handle_small_file(additional_image, 'additional-image')
+            additional_images.append(additional_image_path)
+    if additional_images:
+        small_files['additionalImages'] = additional_images
+    
+    # Documentation files
+    documentation_files = []
+    for key in files:
+        if key.startswith('documentation[') and key.endswith(']'):
+            doc_file = files[key]
+            doc_file_path = handle_small_file(doc_file, 'documentation')
+            documentation_files.append(doc_file_path)
+    if documentation_files:
+        small_files['documentation'] = documentation_files
+    
+    # Combine all file paths (chunked and small)
+    all_files = {
+        'chunkedFiles': chunked_files,
+        'smallFiles': small_files
+    }
+    
+    # Create image entry in database using the existing Image API
+    try:
+        # Prepare image data from the collected information
+        image_data = {
+            'user_id': current_user.user_id,
+            'title': image_details.get('title'),
+            'description': image_details.get('description'),
+            'file_path': main_image_path,  # Use the main image path
+            'capture_date_time': image_details.get('capture_date_time'),
+            'exposure_time': image_details.get('exposure_time'),
+            'iso': image_details.get('iso'),
+            'aperture': image_details.get('aperture'),
+            'focal_length': image_details.get('focal_length'),
+            'focus_score': image_details.get('focus_score')
+        }
+        
+        """ # Option 1: Use the Image API directly by making an internal request
+        # This approach maintains separation of concerns but adds overhead
+        response = requests.post(
+            url_for('api_bp.create_image', _external=True),
+            json=image_data,
+            headers={'Content-Type': 'application/json'}
+        )
+        
+        if response.status_code != 201:
+            return jsonify({'error': f'Failed to create image record: {response.json().get("error")}'}), response.status_code
+            
+        image_id = response.json().get('image_id') """
+        
+        # Option 2: Call the database function directly
+        # This approach is more efficient but creates tighter coupling
+        
+        new_image = Image(
+            user_id=image_data['user_id'],
+            title=image_data['title'],
+            description=image_data['description'],
+            file_path=image_data['file_path'],
+            capture_date_time=datetime.fromisoformat(image_data['capture_date_time']) if image_data['capture_date_time'] else None,
+            exposure_time=image_data['exposure_time'],
+            iso=image_data['iso'],
+            aperture=image_data['aperture'],
+            focal_length=image_data['focal_length'],
+            focus_score=image_data['focus_score']
+        )
+        
+        db.session.add(new_image)
+        db.session.commit()
+        image_id = new_image.image_id
+        
+        
+        # Store additional information if needed
+        # This could be in separate tables related to the image
+        # (e.g., image_location, image_session, additional_image_files, etc.)
+        
+        # Return success response with the created image ID
+        return jsonify({
+            'status': 'success',
+            'message': 'Upload completed successfully',
+            'image_id': image_id
+        })
+        
+    except Exception as e:
+        # If using Option 2, add 
+        db.session.rollback() 
+        return jsonify({'error': str(e)}), 500
+
+def handle_small_file(file, file_type):
+    """Process and save a small file upload"""
+    if file and file.filename:
+        # Create directory if it doesn't exist
+        type_folder = os.path.join(FINAL_UPLOAD_FOLDER, file_type)
+        os.makedirs(type_folder, exist_ok=True)
+        
+        # Generate unique filename
+        filename = secure_filename(file.filename)
+        unique_filename = f"{uuid.uuid4()}_{filename}"
+        file_path = os.path.join(type_folder, unique_filename)
+        
+        # Save file
+        file.save(file_path)
+        
+        # Return relative path
+        return os.path.join(file_type, unique_filename)
+    
     return None
 
 @api_bp.route('/user_id', methods=['GET'])
