@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, jsonify, request, current_app
+from flask import Flask, Blueprint, jsonify, request, current_app, send_file
 from app.models import * # Import from your models.py
 from flask_cors import CORS
 from functools import wraps
@@ -80,11 +80,139 @@ os.makedirs(FINAL_UPLOAD_FOLDER, exist_ok=True)
 
 # Store information about active uploads
 active_uploads = {}
-
 @api_bp.route('/chunk-upload/init', methods=['POST'])
 @token_required
 def init_chunked_upload(current_user):
     """Initialize a new chunked upload"""
+    data = request.json
+    
+    # Generate a unique upload ID
+    upload_id = str(uuid.uuid4())
+    
+    # Create a folder for this upload's chunks
+    upload_folder = os.path.join(TEMP_UPLOAD_FOLDER, upload_id)
+    os.makedirs(upload_folder, exist_ok=True)
+    
+    # Validate upload type (support for new frame types)
+    valid_upload_types = [
+        'main-image', 'lightFrames', 'darkFrames', 'flatFrames', 
+        'biasFrames', 'darkFlats', 'documentation'
+    ]
+    
+    upload_type = data.get('uploadType')
+    if upload_type not in valid_upload_types:
+        return jsonify({'error': f'Invalid upload type. Must be one of {valid_upload_types}'}), 400
+    
+    # Store upload information
+    active_uploads[upload_id] = {
+        'fileName': secure_filename(data.get('fileName')),
+        'fileSize': data.get('fileSize'),
+        'fileType': data.get('fileType'),
+        'uploadType': upload_type, 
+        'fileId': data.get('fileId'),
+        'totalChunks': data.get('totalChunks'),
+        'receivedChunks': 0,
+        'chunkFolder': upload_folder,
+        'isComplete': False
+    }
+    
+    return jsonify({
+        'uploadId': upload_id,
+        'status': 'initialized'
+    })
+
+@api_bp.route('/chunk-upload/complete', methods=['POST'])
+@token_required
+def complete_chunked_upload(current_user):
+    """Complete a chunked upload by combining all chunks"""
+    data = request.json
+    upload_id = data.get('uploadId')
+    
+    # Check if the upload exists
+    if upload_id not in active_uploads:
+        return jsonify({'error': 'Invalid upload ID'}), 400
+    
+    upload_info = active_uploads[upload_id]
+    
+    # Check if all chunks were received
+    if upload_info['receivedChunks'] != upload_info['totalChunks']:
+        return jsonify({
+            'error': 'Not all chunks received',
+            'receivedChunks': upload_info['receivedChunks'],
+            'totalChunks': upload_info['totalChunks']
+        }), 400
+    
+    # Create final destination folder based on upload type
+    type_folder = os.path.join(FINAL_UPLOAD_FOLDER, upload_info['uploadType'])
+    os.makedirs(type_folder, exist_ok=True)
+    
+    # Generate unique filename
+    base_filename = upload_info['fileName']
+    filename = f"{uuid.uuid4()}_{base_filename}"
+    file_path = os.path.join(type_folder, filename)
+    
+    # Combine all chunks into final file
+    with open(file_path, 'wb') as final_file:
+        for i in range(upload_info['totalChunks']):
+            chunk_path = os.path.join(upload_info['chunkFolder'], f'chunk_{i}')
+            with open(chunk_path, 'rb') as chunk_file:
+                final_file.write(chunk_file.read())
+    
+    # Update upload status
+    upload_info['isComplete'] = True
+    upload_info['finalPath'] = file_path
+    
+    # Extract metadata if this is an image file
+    metadata = {}
+    if upload_info['uploadType'] in ['main-image', 'lightFrames', 'darkFrames', 'flatFrames', 'biasFrames', 'darkFlats']:
+        try:
+            # You could use a library like Pillow or exifread to extract EXIF data here
+            # This is a placeholder for where you'd extract image metadata
+            metadata = extract_image_metadata(file_path)
+        except Exception as e:
+            print(f"Error extracting metadata: {str(e)}")
+    
+    # Clean up chunks
+    try:
+        for i in range(upload_info['totalChunks']):
+            chunk_path = os.path.join(upload_info['chunkFolder'], f'chunk_{i}')
+            if os.path.exists(chunk_path):
+                os.remove(chunk_path)
+        
+        # Remove the chunk folder
+        if os.path.exists(upload_info['chunkFolder']):
+            os.rmdir(upload_info['chunkFolder'])
+    except Exception as e:
+        print(f"Error during cleanup: {str(e)}")
+    
+    # Return file path relative to FINAL_UPLOAD_FOLDER
+    relative_path = os.path.join(upload_info['uploadType'], filename)
+    
+    return jsonify({
+        'status': 'complete',
+        'filePath': relative_path,
+        'fileType': upload_info['uploadType'],
+        'fileId': upload_info['fileId'],
+        'metadata': metadata
+    })
+
+def extract_image_metadata(file_path):
+    """Extract metadata from an image file (placeholder function)"""
+    # This would be implemented with a library like Pillow or exifread
+    # For now, return an empty dict
+    return {
+        # Example metadata that could be extracted
+        # 'exposure_time': '1/250',
+        # 'iso': 100,
+        # 'aperture': 5.6,
+        # 'focal_length': 50,
+        # 'capture_date_time': '2023-01-01T12:00:00'
+    }
+
+
+""" @api_bp.route('/chunk-upload/init', methods=['POST'])
+@token_required
+def init_chunked_upload(current_user):
     data = request.json
     
     # Generate a unique upload ID
@@ -115,7 +243,6 @@ def init_chunked_upload(current_user):
 @api_bp.route('/chunk-upload/chunk', methods=['POST'])
 @token_required
 def upload_chunk(current_user):
-    """Handle an individual chunk upload"""
     upload_id = request.form.get('uploadId')
     chunk_index = int(request.form.get('chunkIndex'))
     
@@ -148,7 +275,6 @@ def upload_chunk(current_user):
 @api_bp.route('/chunk-upload/complete', methods=['POST'])
 @token_required
 def complete_chunked_upload(current_user):
-    """Complete a chunked upload by combining all chunks"""
     data = request.json
     upload_id = data.get('uploadId')
     
@@ -194,7 +320,45 @@ def complete_chunked_upload(current_user):
         'filePath': relative_path,
         'fileType': upload_info['uploadType'],
         'fileId': upload_info['fileId']
-    })
+    }) """
+
+def create_image_record(user_id, image_details, file_path):
+    """Create a new Image record"""
+    new_image = Image(
+        user_id=user_id,
+        title=image_details.get('title'),
+        description=image_details.get('description'),
+        file_path=file_path,
+        capture_date_time=datetime.fromisoformat(image_details.get('capture_date_time')) if image_details.get('capture_date_time') else None,
+        exposure_time=image_details.get('exposure_time'),
+        iso=image_details.get('iso'),
+        aperture=image_details.get('aperture'),
+        focal_length=image_details.get('focal_length'),
+        focus_score=image_details.get('focus_score')
+    )
+    return new_image
+
+def create_image_object_relations(images_id, object_id):
+    """Create ImageObject relations for the image"""
+    # Create relation
+    try:
+        image_object = ImageObject(
+            image_id = images_id,
+            object_id = '1'
+        )
+        return image_object
+    except: 
+        print("Bro something wrong in database model...")
+        return None
+
+def create_image_gear_relations(image_id, selected_gear):
+    """Create ImageGear relations for the image"""
+    for gear_id in selected_gear:
+        image_gear = ImageGear(
+            image_id=image_id,
+            gear_id=gear_id
+        )
+        db.session.add(image_gear)
 
 @api_bp.route('/finalize-upload', methods=['POST'])
 @token_required
@@ -204,12 +368,9 @@ def finalize_upload(current_user):
     form_data = request.form
     files = request.files
     
-    # Get chunked file paths
-    chunked_files = {}
-    for key in form_data:
-        if key.startswith('chunkedFiles[') and key.endswith(']'):
-            file_id = key[len('chunkedFiles['):-1]
-            chunked_files[file_id] = form_data[key]
+    # For debugging
+    print("Form data keys:", list(form_data.keys()))
+    print("Files keys:", list(files.keys()))
     
     # Process metadata
     image_details = {}
@@ -242,97 +403,131 @@ def finalize_upload(current_user):
         except json.JSONDecodeError:
             return jsonify({'error': 'Invalid session details format'}), 400
     
-    # Handle small files (not uploaded in chunks)
-    small_files = {}
-    
-    # Main image
+    # Process uploaded files
     main_image_path = None
+    image_files = {
+        'lightFrames': [],
+        'darkFrames': [],
+        'flatFrames': [],
+        'biasFrames': [],
+        'darkFlats': []
+    }
+    
+    # 1. Process main image
     if 'images.mainImage' in files:
         main_image = files['images.mainImage']
         main_image_path = handle_small_file(main_image, 'main-image')
-        small_files['mainImage'] = main_image_path
+        print(f"Processed main image: {main_image_path}")
     
-    # Additional images
-    additional_images = []
-    for key in files:
-        if key.startswith('images.additionalImages[') and key.endswith(']'):
-            additional_image = files[key]
-            additional_image_path = handle_small_file(additional_image, 'additional-image')
-            additional_images.append(additional_image_path)
-    if additional_images:
-        small_files['additionalImages'] = additional_images
-    
-    # Documentation files
-    documentation_files = []
-    for key in files:
-        if key.startswith('documentation[') and key.endswith(']'):
-            doc_file = files[key]
-            doc_file_path = handle_small_file(doc_file, 'documentation')
-            documentation_files.append(doc_file_path)
-    if documentation_files:
-        small_files['documentation'] = documentation_files
-    
-    # Combine all file paths (chunked and small)
-    all_files = {
-        'chunkedFiles': chunked_files,
-        'smallFiles': small_files
-    }
-    
-    # Create image entry in database using the existing Image API
-    try:
-        # Prepare image data from the collected information
-        image_data = {
-            'user_id': current_user.user_id,
-            'title': image_details.get('title'),
-            'description': image_details.get('description'),
-            'file_path': main_image_path,  # Use the main image path
-            'capture_date_time': image_details.get('capture_date_time'),
-            'exposure_time': image_details.get('exposure_time'),
-            'iso': image_details.get('iso'),
-            'aperture': image_details.get('aperture'),
-            'focal_length': image_details.get('focal_length'),
-            'focus_score': image_details.get('focus_score')
-        }
+    # 2. Process frame files - first check for direct file uploads
+    for frame_type in image_files.keys():
+        file_key = f'images.{frame_type}'
         
-        """ # Option 1: Use the Image API directly by making an internal request
-        # This approach maintains separation of concerns but adds overhead
-        response = requests.post(
-            url_for('api_bp.create_image', _external=True),
-            json=image_data,
-            headers={'Content-Type': 'application/json'}
-        )
-        
-        if response.status_code != 201:
-            return jsonify({'error': f'Failed to create image record: {response.json().get("error")}'}), response.status_code
+        # Handle multiple files
+        for key in files.keys():
+            if key.startswith(file_key):
+                frame_file = files[key]
+                frame_path = handle_small_file(frame_file, frame_type)
+                if frame_path:
+                    print(f"Direct upload for {frame_type}: {frame_path}")
+                    image_files[frame_type].append(frame_path)
+    
+    # 3. Process file data from hidden JSON field (new approach)
+    if 'images.fileData' in form_data:
+        try:
+            file_data = json.loads(form_data['images.fileData'])
             
-        image_id = response.json().get('image_id') """
-        
-        # Option 2: Call the database function directly
-        # This approach is more efficient but creates tighter coupling
-        
-        new_image = Image(
-            user_id=image_data['user_id'],
-            title=image_data['title'],
-            description=image_data['description'],
-            file_path=image_data['file_path'],
-            capture_date_time=datetime.fromisoformat(image_data['capture_date_time']) if image_data['capture_date_time'] else None,
-            exposure_time=image_data['exposure_time'],
-            iso=image_data['iso'],
-            aperture=image_data['aperture'],
-            focal_length=image_data['focal_length'],
-            focus_score=image_data['focus_score']
-        )
-        
+            # Log what we received
+            print(f"Received file data: {file_data}")
+            
+            # Look for file uploads that match the file data
+            for frame_type, frames_data in file_data.items():
+                if not isinstance(frames_data, list):
+                    continue
+                    
+                for idx, frame_info in enumerate(frames_data):
+                    frame_name = frame_info.get('name')
+                    
+                    # Look for file uploads that match this name
+                    for key in files.keys():
+                        if key.startswith(f'images.{frame_type}') and files[key].filename == frame_name:
+                            frame_file = files[key]
+                            frame_path = handle_small_file(frame_file, frame_type)
+                            if frame_path and frame_path not in image_files[frame_type]:
+                                print(f"Added {frame_type} from fileData: {frame_path}")
+                                image_files[frame_type].append(frame_path)
+                                break
+                    
+                    # Also check for hidden field references
+                    hidden_field_key = f'images.{frame_type}[{idx}]'
+                    if hidden_field_key in form_data:
+                        frame_value = form_data[hidden_field_key]
+                        # If this is a reference to a previously uploaded file, add it
+                        if os.path.exists(frame_value) or frame_value.startswith(('http://', 'https://')):
+                            if frame_value not in image_files[frame_type]:
+                                print(f"Added {frame_type} from hidden field: {frame_value}")
+                                image_files[frame_type].append(frame_value)
+        except json.JSONDecodeError as e:
+            print(f"Error parsing images.fileData: {str(e)}")
+    
+    # 4. Process chunked files (if any)
+    chunked_files = {}
+    for key in form_data:
+        if key.startswith('chunkedFiles[') and key.endswith(']'):
+            file_id = key[len('chunkedFiles['):-1]
+            chunked_files[file_id] = form_data[key]
+    
+    # Process chunked files
+    for file_id, file_path in chunked_files.items():
+        file_type = determine_file_type(file_id)
+        if file_type in image_files:
+            print(f"Adding chunked file to {file_type}: {file_path}")
+            image_files[file_type].append(file_path)
+        elif file_id == 'mainImage' and not main_image_path:
+            main_image_path = file_path
+            print(f"Set main image from chunked file: {main_image_path}")
+    
+    # Log the final image files collection
+    for frame_type, frames in image_files.items():
+        print(f"{frame_type} count: {len(frames)}")
+        if frames:
+            print(f"Sample {frame_type}: {frames[0]}")
+    
+    try:
+        # 1. Create the main image record
+        new_image = create_image_record(current_user.user_id, image_details, main_image_path)
         db.session.add(new_image)
-        db.session.commit()
+        db.session.flush()  # Flush to get the image_id
         image_id = new_image.image_id
+
+        # 2. Create related records
+
+        # 2.1 Handle celestial objects
+        object_id = image_details.get('object_id')
+        if object_id:
+            image_object = create_image_object_relations(image_id, object_id)
+            db.session.add(image_object) 
+
+        # 2.2 Handle Gear
+        if gear_details.get('selectedGear'):
+            for gear_item in gear_details.get('selectedGear'):
+                gear_id = gear_item.get('gear_id')
+                if gear_id:
+                    image_gear = ImageGear(
+                        image_id=image_id,
+                        gear_id=gear_id
+                    )
+                    db.session.add(image_gear)
+
+        # 2.3 Handle Session 
+        if session_details:
+            create_or_link_session(image_id, current_user.user_id, session_details, location_details)
+
+        # 3. Create frame tracking records
+        create_frame_records(image_id, image_files)
+
+        db.session.commit()
         
-        
-        # Store additional information if needed
-        # This could be in separate tables related to the image
-        # (e.g., image_location, image_session, additional_image_files, etc.)
-        
-        # Return success response with the created image ID
         return jsonify({
             'status': 'success',
             'message': 'Upload completed successfully',
@@ -340,9 +535,260 @@ def finalize_upload(current_user):
         })
         
     except Exception as e:
-        # If using Option 2, add 
         db.session.rollback() 
+        print(f"Error in finalize upload: {str(e)}")  # Add better logging
         return jsonify({'error': str(e)}), 500
+
+def determine_file_type(file_id):
+    """
+    Determines the type of astronomical frame based on the file_id.
+    
+    Parameters:
+        file_id (str): The identifier string for the file
+        
+    Returns:
+        str or None: The frame type category ('lightFrames', 'darkFrames', 
+                     'flatFrames', 'biasFrames', 'darkFlats') or None if undetermined
+    
+    Note:
+        The function prioritizes certain patterns when multiple keywords are present.
+        Order of priority: darkFlats > dark > flat > bias > light
+    """
+    if not isinstance(file_id, str):
+        return None
+        
+    # Convert to lowercase for case-insensitive matching
+    lowercase_id = file_id.lower()
+    
+    # Check for specialized combined frame types first
+    if 'dark' in lowercase_id and 'flat' in lowercase_id:
+        return 'darkFlats'
+    
+    # Then check for standard frame types
+    if 'dark' in lowercase_id:
+        return 'darkFrames'
+    elif 'flat' in lowercase_id:
+        return 'flatFrames'
+    elif 'bias' in lowercase_id:
+        return 'biasFrames'
+    elif 'light' in lowercase_id:
+        return 'lightFrames'
+    
+    # No recognized pattern
+    return None
+
+def create_frame_records(image_id, image_files):
+    """Create FrameSet, FrameSummary, and RawFrame records"""
+    # Create FrameSet
+    new_frameset = FrameSet(
+        image_id=image_id
+    )
+    db.session.add(new_frameset)
+    db.session.flush()
+    frameset_id = new_frameset.frameset_id
+    
+    # Track frame counts for summary
+    frame_counts = {
+        'lightFrames': 0,
+        'darkFrames': 0,
+        'flatFrames': 0, 
+        'biasFrames': 0,
+        'darkFlats': 0
+    }
+    
+    # Create RawFrame records for each frame type
+    for frame_type, frame_list in image_files.items():
+        if frame_type in frame_counts:
+            for frame_path in frame_list:
+                # Skip empty paths
+                if not frame_path:
+                    continue
+
+                # Check if frame_path is an object or string
+                if isinstance(frame_path, dict):
+                    # Extract the path from the object
+                    if 'path' in frame_path:
+                        frame_path = frame_path['path']
+                    else:
+                        continue  # Skip if no path found
+                
+                # Create RawFrame record
+                type_mapping = {
+                    'lightFrames': 'light',
+                    'darkFrames': 'dark',
+                    'flatFrames': 'flat',
+                    'biasFrames': 'bias',
+                    'darkFlats': 'dark_flat'
+                }
+                
+                print(f"Creating RawFrame for {frame_type}: {frame_path}")
+                
+                raw_frame = RawFrame(
+                    frameset_id=frameset_id,
+                    frame_type=type_mapping[frame_type],
+                    file_path=frame_path,
+                    # Additional metadata could be extracted in a more sophisticated way
+                    exposure_time=None,  # Default to None for now
+                    iso=None,            # Default to None for now
+                    temperature=None,    # Default to None for now
+                    capture_time=datetime.utcnow()  # Default to now
+                )
+                db.session.add(raw_frame)
+                
+                # Increment count for this frame type
+                frame_counts[frame_type] += 1
+    
+    # Create FrameSummary
+    frame_summary = FrameSummary(
+        image_id=image_id,
+        light_frame_count=frame_counts['lightFrames'],
+        dark_frame_count=frame_counts['darkFrames'],
+        flat_frame_count=frame_counts['flatFrames'],
+        bias_frame_count=frame_counts['biasFrames'],
+        dark_flat_count=frame_counts['darkFlats']
+    )
+    db.session.add(frame_summary)
+    
+    # Log the frame counts
+    print(f"FrameSummary counts: Light={frame_counts['lightFrames']}, Dark={frame_counts['darkFrames']}", f"Flat={frame_counts['flatFrames']}, Bias={frame_counts['biasFrames']}, DarkFlat={frame_counts['darkFlats']}")
+
+
+""" def handle_small_file(file, file_type):
+    if file and file.filename:
+        # Create directory if it doesn't exist
+        type_folder = os.path.join(FINAL_UPLOAD_FOLDER, file_type)
+        os.makedirs(type_folder, exist_ok=True)
+        
+        # Generate unique filename
+        filename = secure_filename(file.filename)
+        unique_filename = f"{uuid.uuid4()}_{filename}"
+        file_path = os.path.join(type_folder, unique_filename)
+        
+        # Save file
+        file.save(file_path)
+        
+        # Return relative path
+        return os.path.join(file_type, unique_filename)
+    
+    return None """
+
+def create_or_link_session(image_id, user_id, session_details, location_details):
+    """Create or link a session and create ImageSession relation"""
+    # Handle location first
+    location_id = None
+    if location_details:
+        # Check if location exists
+        if location_details.get('location_id'):
+            location_id = location_details['location_id']
+        else:
+            # Create new location
+            new_location = Location(
+                user_id=user_id,
+                name=location_details.get('name'),
+                latitude=location_details.get('latitude'),
+                longitude=location_details.get('longitude'),
+                bortle_class=location_details.get('bortle_class'),
+                notes=location_details.get('notes')
+            )
+            db.session.add(new_location)
+            db.session.flush()
+            location_id = new_location.location_id
+    
+    # Handle session
+    session_id = None
+    if session_details.get('session_id'):
+        session_id = session_details['session_id']
+    else:
+        # Create new session
+        session_date = None
+        if session_details.get('session_date'):
+            try:
+                session_date = datetime.fromisoformat(session_details['session_date']).date()
+            except ValueError:
+                pass
+        
+        new_session = Session(
+            user_id=user_id,
+            session_date=session_date,
+            weather_conditions=session_details.get('weather_conditions'),
+            seeing_conditions=session_details.get('seeing_conditions'),
+            moon_phase=session_details.get('moon_phase'),
+            light_pollution_index=session_details.get('light_pollution_index'),
+            location_id=location_id
+        )
+        db.session.add(new_session)
+        db.session.flush()
+        session_id = new_session.session_id
+    
+    # Create image-session relation
+    if session_id:
+        image_session = ImageSession(
+            image_id=image_id,
+            session_id=session_id
+        )
+        db.session.add(image_session)
+
+""" def create_frame_records(image_id, image_files):
+    # Create FrameSet, FrameSummary, and RawFrame records
+    # Create FrameSet
+    new_frameset = FrameSet(
+        image_id=image_id
+    )
+    db.session.add(new_frameset)
+    db.session.flush()
+    frameset_id = new_frameset.frameset_id
+    
+    # Track frame counts for summary
+    frame_counts = {
+        'lightFrames': 0,
+        'darkFrames': 0,
+        'flatFrames': 0, 
+        'biasFrames': 0,
+        'darkFlats': 0
+    }
+    
+    # Create RawFrame records for each frame type
+    for frame_type, frame_list in image_files.items():
+        if frame_type in frame_counts and isinstance(frame_list, list):
+            for frame in frame_list:
+                # Create RawFrame record
+                type_mapping = {
+                    'lightFrames': 'light',
+                    'darkFrames': 'dark',
+                    'flatFrames': 'flat',
+                    'biasFrames': 'bias',
+                    'darkFlats': 'dark_flat'
+                }
+                
+                # Skip if not a frame type
+                if frame_type not in type_mapping:
+                    continue
+                
+                raw_frame = RawFrame(
+                    frameset_id=frameset_id,
+                    frame_type=type_mapping[frame_type],
+                    file_path=frame['path'],
+                    # Additional metadata could be extracted from the filename or form data
+                    exposure_time=None,  # Could be set from metadata
+                    iso=None,            # Could be set from metadata
+                    temperature=None,    # Could be set from metadata
+                    capture_time=datetime.utcnow()  # Default to now, but could be set from metadata
+                )
+                db.session.add(raw_frame)
+                
+                # Increment count for this frame type
+                frame_counts[frame_type] += 1
+    
+    # Create FrameSummary
+    frame_summary = FrameSummary(
+        image_id=image_id,
+        light_frame_count=frame_counts['lightFrames'],
+        dark_frame_count=frame_counts['darkFrames'],
+        flat_frame_count=frame_counts['flatFrames'],
+        bias_frame_count=frame_counts['biasFrames'],
+        dark_flat_count=frame_counts['darkFlats']
+    )
+    db.session.add(frame_summary) """
 
 def handle_small_file(file, file_type):
     """Process and save a small file upload"""
@@ -843,6 +1289,201 @@ def delete_session(current_user, session_id):
         return jsonify({'error': str(e)}), 500
 
 # ---------------------------- Image API ----------------------------
+
+
+@api_bp.route('/images/<string:image_id>', methods=['GET'])
+def get_image_detail(image_id):
+    try:
+        # Get the main image data
+        image = Image.query.get_or_404(image_id)
+        
+        # Get user data
+        user_data = None
+        if image.user:
+            user_data = {
+                'user_id': image.user.user_id,
+                'username': image.user.username,
+                'name': image.user.name,
+                'profile_image': image.user.profile_image
+            }
+        
+        # Get celestial objects
+        objects_data = []
+        for img_obj in image.objects:
+            obj = img_obj.object
+            objects_data.append({
+                'object': {
+                    'object_id': obj.object_id,
+                    'name': obj.name,
+                    'object_type': obj.object_type,
+                    'magnitude': obj.magnitude,
+                    'right_ascension': obj.right_ascension,
+                    'declination': obj.declination
+                }
+            })
+        
+        # Get gear used
+        gear_data = []
+        for img_gear in image.gear_used:
+            gear = img_gear.gear
+            gear_data.append({
+                'gear': {
+                    'gear_id': gear.gear_id,
+                    'gear_type': gear.gear_type,
+                    'brand': gear.brand,
+                    'model': gear.model
+                }
+            })
+        
+        # Get sessions
+        sessions_data = []
+        for img_session in image.sessions:
+            session = img_session.session
+            location_data = None
+            if session.location:
+                location_data = {
+                    'location_id': session.location.location_id,
+                    'name': session.location.name,
+                    'latitude': session.location.latitude,
+                    'longitude': session.location.longitude,
+                    'bortle_class': session.location.bortle_class
+                }
+            
+            sessions_data.append({
+                'session': {
+                    'session_id': session.session_id,
+                    'session_date': session.session_date.isoformat() if session.session_date else None,
+                    'weather_conditions': session.weather_conditions,
+                    'seeing_conditions': session.seeing_conditions,
+                    'moon_phase': session.moon_phase,
+                    'light_pollution_index': session.light_pollution_index,
+                    'location': location_data
+                }
+            })
+        
+        # Get processing logs
+        logs_data = []
+        for log in image.processing_logs:
+            logs_data.append({
+                'log_id': log.log_id,
+                'step_description': log.step_description,
+                'timestamp': to_iso_timestamp(log.timestamp),
+                'software_used': log.software_used,
+                'notes': log.notes
+            })
+        
+        # Get frame summary
+        frame_summary_data = None
+        if image.frame_summary:
+            frame_summary_data = {
+                'summary_id': image.frame_summary.summary_id,
+                'light_frame_count': image.frame_summary.light_frame_count,
+                'dark_frame_count': image.frame_summary.dark_frame_count,
+                'flat_frame_count': image.frame_summary.flat_frame_count,
+                'bias_frame_count': image.frame_summary.bias_frame_count,
+                'dark_flat_count': image.frame_summary.dark_flat_count
+            }
+        
+        # Get raw frames
+        frameset_data = None
+        if image.frameset:
+            raw_frames = []
+            for frame in image.frameset.raw_frames:
+                raw_frames.append({
+                    'frame_id': frame.frame_id,
+                    'frame_type': frame.frame_type,
+                    'file_path': frame.file_path,
+                    'exposure_time': frame.exposure_time,
+                    'iso': frame.iso,
+                    'temperature': frame.temperature,
+                    'capture_time': to_iso_timestamp(frame.capture_time)
+                })
+            
+            frameset_data = {
+                'frameset_id': image.frameset.frameset_id,
+                'created_at': to_iso_timestamp(image.frameset.created_at),
+                'raw_frames': raw_frames
+            }
+        
+        # Compile the complete response
+        data = {
+            'image_id': image.image_id,
+            'title': image.title,
+            'description': image.description,
+            'file_path': image.file_path,
+            'capture_date_time': to_iso_timestamp(image.capture_date_time),
+            'exposure_time': image.exposure_time,
+            'iso': image.iso,
+            'aperture': image.aperture,
+            'focal_length': image.focal_length,
+            'focus_score': image.focus_score,
+            'user': user_data,
+            'objects': objects_data,
+            'gear_used': gear_data,
+            'sessions': sessions_data,
+            'processing_logs': logs_data,
+            'frame_summary': frame_summary_data,
+            'frameset': frameset_data
+        }
+        
+        return jsonify(data)
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+def get_image_path(image_id):
+  """
+  Retrieves the file path of an image from the database based on its ID.
+ 
+
+  Args:
+  image_id (str): The unique ID of the image.
+ 
+
+  Returns:
+  str: The file path of the image, or None if the image ID is not found.
+  """
+  image = Image.query.get(image_id)
+  if image:
+   return 'uploads/'+image.file_path
+  return None
+ 
+
+@api_bp.route('/image/<image_id>', methods=['GET'])
+def get_image_by_id(image_id):
+  """
+  API endpoint to retrieve and send an image file based on its ID.
+ 
+
+  Args:
+  image_id (str): The ID of the image to retrieve.
+ 
+  Returns:
+  Response: The image file if found, or a JSON error message with a 404 status code if not found.
+  """
+  image_path = get_image_path(image_id)
+ 
+
+  if image_path:
+  # Determine the correct MIME type based on the file extension.
+   try:
+    # Ensure the path is absolute
+    full_image_path = os.path.abspath(image_path)
+    #Mimetype detection
+    mime_type =  'image/jpeg' #default
+    if full_image_path.lower().endswith(('.png', '.PNG')):
+        mime_type = 'image/png'
+    elif full_image_path.lower().endswith(('.gif', '.GIF')):
+        mime_type = 'image/gif'
+    elif full_image_path.lower().endswith(('.jpg', '.JPG', '.jpeg', '.JPEG')):
+        mime_type = 'image/jpeg'
+    return send_file(full_image_path, mimetype=mime_type)
+   except Exception as e:
+    return jsonify({'error': f'Error sending image: {str(e)}'}), 500
+  else:
+   return jsonify({'error': 'Image not found'}), 404
+
 @api_bp.route('/images', methods=['GET'])
 def get_images():
     try:
@@ -864,26 +1505,7 @@ def get_images():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@api_bp.route('/images/<string:image_id>', methods=['GET'])
-def get_image(image_id):
-    try:
-        image = Image.query.get_or_404(image_id)
-        data = {
-            'image_id': image.image_id,
-            'user_id': image.user_id,
-            'title': image.title,
-            'description': image.description,
-            'file_path': image.file_path,
-            'capture_date_time': to_iso_timestamp(image.capture_date_time),
-            'exposure_time': image.exposure_time,
-            'iso': image.iso,
-            'aperture': image.aperture,
-            'focal_length': image.focal_length,
-            'focus_score': image.focus_score
-        }
-        return jsonify(data)
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+
 
 @api_bp.route('/images', methods=['POST'])
 def create_image():
@@ -1514,3 +2136,45 @@ for object_type in CELESTIAL_OBJECT_TYPES:
             return jsonify({'error': str(e)}), 500
     #Dynamically set the function name.
     get_celestial_objects_by_type.__name__ = f'get_{object_type.lower().replace(" ", "_")}'
+
+
+@api_bp.route('/recent-uploads', methods=['GET'])
+@token_required
+def get_recent_uploads(current_user):
+     """
+     Returns the 10 most recent image uploads with user, title, description,
+     user's name, and associated celestial objects, ordered by upload date.
+     """
+     recent_images = Image.query.filter_by(user_id=current_user.user_id) \
+         .order_by(Image.capture_date_time.desc()) \
+         .limit(10) \
+         .all()
+ 
+
+     output = []
+     for image in recent_images:
+         celestial_objects = []
+         for img_obj in image.objects:
+             celestial_objects.append({
+                 'object_id': img_obj.object.object_id,
+                 'name': img_obj.object.name,
+                 'object_type': img_obj.object.object_type
+             })
+ 
+
+         output.append({
+             'image_id': image.image_id,
+             'title': image.title,
+             'description': image.description,
+             'file_path': image.file_path,
+             'upload_date': image.capture_date_time.isoformat() if image.capture_date_time else None,
+             'user': {
+                 'user_id': image.user.user_id,
+                 'name': image.user.name,
+                 'username': image.user.username
+             },
+             'celestial_objects': celestial_objects
+         })
+ 
+
+     return jsonify(recent_uploads=output)

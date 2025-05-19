@@ -6,6 +6,7 @@ import Home from "./components/blog/Blog";
 import ProtectedRoute from "./components/ProtectedRoute";
 import UploadWork from "./components/upload-work/UploadWork";
 import Checkout from "./components/checkout/Checkout";
+import ImageDetail from "./components/ImageDetail";
 
 export default function App() {
   return (
@@ -35,6 +36,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Checkout />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/imaging/:imageId"
+          element={
+            <ProtectedRoute>
+              <ImageDetail />
             </ProtectedRoute>
           }
         />

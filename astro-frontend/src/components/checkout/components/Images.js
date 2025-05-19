@@ -34,7 +34,7 @@ const UploadButton = styled(Button)(({ theme }) => ({
   marginTop: '8px',
 }));
 
-function CustomFileUpload({ label, onChange, multiple }) {
+function CustomFileUpload({ label, onChange, multiple, name }) {
   const fileInputRef = useRef(null);
 
   const handleClick = () => {
@@ -58,6 +58,7 @@ function CustomFileUpload({ label, onChange, multiple }) {
         onChange={handleChange}
         multiple={multiple}
         ref={fileInputRef}
+        name={name} 
       />
     </div>
   );
@@ -141,6 +142,7 @@ export default function Images({ onImageDetailsChange, initialImageDetails, onIs
           <CustomFileUpload
             label={mainImage ? mainImage.name : 'Choose Image'}
             onChange={handleMainImageChange}
+            name="images.mainImage" 
           />
           {mainImage && (
             <div style={{ marginTop: '8px', height: fixedPreviewHeight, overflow: 'hidden', display: 'flex', justifyContent: 'center' }}>
@@ -167,15 +169,21 @@ export default function Images({ onImageDetailsChange, initialImageDetails, onIs
             label={lightFrames.length > 0 ? `${lightFrames.length} files` : 'Choose Files'}
             onChange={handleLightFramesChange}
             multiple
+            name="images.lightFrames" 
           />
           {lightFrames.length > 0 && (
             <div style={{ marginTop: '4px', fontSize: '0.8rem', color: 'grey' }}>
-              {lightFrames.map((file) => (
+              {lightFrames.map((file, index) => (
                 <div key={file.name} style={{ height: fixedPreviewHeight, width: 'auto', overflow: 'hidden', display: 'inline-block', marginRight: '4px' }}>
                   <img
                     src={URL.createObjectURL(file)}
                     alt={file.name}
                     style={{ maxHeight: '100%', width: 'auto', borderRadius: '4px' }}
+                  />
+                  <input 
+                    type="hidden" 
+                    name={`images.lightFrames[${index}]`} 
+                    value={file.name} 
                   />
                 </div>
               ))}
@@ -197,15 +205,21 @@ export default function Images({ onImageDetailsChange, initialImageDetails, onIs
             label={darkFrames.length > 0 ? `${darkFrames.length} files` : 'Choose Files'}
             onChange={handleDarkFramesChange}
             multiple
+            name="images.darkFrames"
           />
           {darkFrames.length > 0 && (
             <div style={{ marginTop: '4px', fontSize: '0.8rem', color: 'grey' }}>
-              {darkFrames.map((file) => (
+              {darkFrames.map((file, index) => (
                 <div key={file.name} style={{ height: fixedPreviewHeight, width: 'auto', overflow: 'hidden', display: 'inline-block', marginRight: '4px' }}>
                   <img
                     src={URL.createObjectURL(file)}
                     alt={file.name}
                     style={{ maxHeight: '100%', width: 'auto', borderRadius: '4px' }}
+                  />
+                  <input 
+                    type="hidden" 
+                    name={`images.darkFrames[${index}]`} 
+                    value={file.name} 
                   />
                 </div>
               ))}
@@ -227,15 +241,21 @@ export default function Images({ onImageDetailsChange, initialImageDetails, onIs
             label={flatFrames.length > 0 ? `${flatFrames.length} files` : 'Choose Files'}
             onChange={handleFlatFramesChange}
             multiple
+            name="images.flatFrames" 
           />
           {flatFrames.length > 0 && (
             <div style={{ marginTop: '4px', fontSize: '0.8rem', color: 'grey' }}>
-              {flatFrames.map((file) => (
+              {flatFrames.map((file, index) => (
                 <div key={file.name} style={{ height: fixedPreviewHeight, width: 'auto', overflow: 'hidden', display: 'inline-block', marginRight: '4px' }}>
                   <img
                     src={URL.createObjectURL(file)}
                     alt={file.name}
                     style={{ maxHeight: '100%', width: 'auto', borderRadius: '4px' }}
+                  />
+                  <input 
+                    type="hidden" 
+                    name={`images.flatFrames[${index}]`} 
+                    value={file.name} 
                   />
                 </div>
               ))}
@@ -257,15 +277,21 @@ export default function Images({ onImageDetailsChange, initialImageDetails, onIs
             label={biasFrames.length > 0 ? `${biasFrames.length} files` : 'Choose Files'}
             onChange={handleBiasFramesChange}
             multiple
+            name="images.biasFrames" 
           />
           {biasFrames.length > 0 && (
             <div style={{ marginTop: '4px', fontSize: '0.8rem', color: 'grey' }}>
-              {biasFrames.map((file) => (
+              {biasFrames.map((file, index) => (
                 <div key={file.name} style={{ height: fixedPreviewHeight, width: 'auto', overflow: 'hidden', display: 'inline-block', marginRight: '4px' }}>
                   <img
                     src={URL.createObjectURL(file)}
                     alt={file.name}
                     style={{ maxHeight: '100%', width: 'auto', borderRadius: '4px' }}
+                  />
+                  <input 
+                    type="hidden" 
+                    name={`images.biasFrames[${index}]`} 
+                    value={file.name} 
                   />
                 </div>
               ))}
@@ -287,15 +313,21 @@ export default function Images({ onImageDetailsChange, initialImageDetails, onIs
             label={darkFlats.length > 0 ? `${darkFlats.length} files` : 'Choose Files'}
             onChange={handleDarkFlatsChange}
             multiple
+            name="images.darkFlats" 
           />
           {darkFlats.length > 0 && (
             <div style={{ marginTop: '4px', fontSize: '0.8rem', color: 'grey' }}>
-              {darkFlats.map((file) => (
+              {darkFlats.map((file, index) => (
                 <div key={file.name} style={{ height: fixedPreviewHeight, width: 'auto', overflow: 'hidden', display: 'inline-block', marginRight: '4px' }}>
                   <img
                     src={URL.createObjectURL(file)}
                     alt={file.name}
                     style={{ maxHeight: '100%', width: 'auto', borderRadius: '4px' }}
+                  />
+                  <input 
+                    type="hidden" 
+                    name={`images.darkFlats[${index}]`} 
+                    value={file.name} 
                   />
                 </div>
               ))}
@@ -303,6 +335,22 @@ export default function Images({ onImageDetailsChange, initialImageDetails, onIs
           )}
         </FormGrid>
       </Grid>
+
+      {/* Add this section to ensure the file data is properly included in form submission */}
+      <div style={{ display: 'none' }}>
+        {/* Include the image details as a JSON string */}
+        <input 
+          type="hidden" 
+          name="images.fileData" 
+          value={JSON.stringify({
+            lightFrames: lightFrames.map(f => ({ name: f.name, size: f.size, type: f.type })),
+            darkFrames: darkFrames.map(f => ({ name: f.name, size: f.size, type: f.type })),
+            flatFrames: flatFrames.map(f => ({ name: f.name, size: f.size, type: f.type })),
+            biasFrames: biasFrames.map(f => ({ name: f.name, size: f.size, type: f.type })),
+            darkFlats: darkFlats.map(f => ({ name: f.name, size: f.size, type: f.type })),
+          })}
+        />
+      </div>
     </Grid>
   );
 }

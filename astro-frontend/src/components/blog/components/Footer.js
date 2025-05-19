@@ -19,7 +19,7 @@ function Copyright() {
     <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
       {'Copyright © '}
       <Link color="text.secondary" href="https://mui.com/">
-        Sitemark
+        AstroArchive
       </Link>
       &nbsp;
       {new Date().getFullYear()}
@@ -58,7 +58,6 @@ export default function Footer() {
             }}
           >
             <Box sx={{ width: { xs: '100%', sm: '60%' } }}>
-              <SitemarkIcon />
               <Typography
                 variant="body2"
                 gutterBottom
@@ -98,7 +97,7 @@ export default function Footer() {
               </Stack>
             </Box>
           </Box>
-          <Box
+          {/* <Box
             sx={{
               display: { xs: 'none', sm: 'flex' },
               flexDirection: 'column',
@@ -123,8 +122,8 @@ export default function Footer() {
             <Link color="text.secondary" variant="body2" href="#">
               FAQs
             </Link>
-          </Box>
-          <Box
+          </Box> */}
+          {/* <Box
             sx={{
               display: { xs: 'none', sm: 'flex' },
               flexDirection: 'column',
@@ -143,7 +142,7 @@ export default function Footer() {
             <Link color="text.secondary" variant="body2" href="#">
               Press
             </Link>
-          </Box>
+          </Box> */}
           <Box
             sx={{
               display: { xs: 'none', sm: 'flex' },
@@ -196,7 +195,7 @@ export default function Footer() {
             <IconButton
               color="inherit"
               size="small"
-              href="https://github.com/mui"
+              href="https://github.com/abhayprabhakar"
               aria-label="GitHub"
               sx={{ alignSelf: 'center' }}
             >
@@ -214,7 +213,7 @@ export default function Footer() {
             <IconButton
               color="inherit"
               size="small"
-              href="https://www.linkedin.com/company/mui/"
+              href="https://www.linkedin.com/in/abhay-prabhakar/"
               aria-label="LinkedIn"
               sx={{ alignSelf: 'center' }}
             >

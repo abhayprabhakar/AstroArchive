@@ -23,6 +23,7 @@ export default function ImageDetails({ onFormDataChange, initialData = {} }) {
   const [formState, setFormState] = useState({
     selectedObjectType: '',
     selectedObjectName: '',
+    object_id: '', // This will store the numeric ID
     title: '',
     description: '',
     iso: '',
@@ -53,6 +54,7 @@ export default function ImageDetails({ onFormDataChange, initialData = {} }) {
     const requiredFields = {
       selectedObjectType: !formState.selectedObjectType,
       selectedObjectName: !formState.selectedObjectName,
+      object_id: !formState.object_id, // Add validation for object_id
       title: !formState.title,
       iso: !formState.iso,
       focal_length: !formState.focal_length,
@@ -128,15 +130,30 @@ export default function ImageDetails({ onFormDataChange, initialData = {} }) {
     setFormState(prev => ({
       ...prev,
       selectedObjectType: event.target.value,
-      selectedObjectName: '' // Reset object name when type changes
+      selectedObjectName: '', // Reset object name when type changes
+      object_id: '' // Reset object_id when type changes
     }));
   };
 
   const handleObjectNameChange = (event) => {
-    setFormState(prev => ({
-      ...prev,
-      selectedObjectName: event.target.value
-    }));
+    const selectedId = event.target.value;
+    
+    // Find the selected object to get its name and ID
+    const selectedObject = celestialObjects.find(obj => obj.object_id === selectedId);
+    
+    if (selectedObject) {
+      setFormState(prev => ({
+        ...prev,
+        selectedObjectName: selectedObject.name,
+        object_id: selectedObject.object_id // This ensures object_id is properly set
+      }));
+    } else {
+      setFormState(prev => ({
+        ...prev,
+        selectedObjectName: '',
+        object_id: ''
+      }));
+    }
   };
 
   // Get unique object types
@@ -152,6 +169,7 @@ export default function ImageDetails({ onFormDataChange, initialData = {} }) {
 
   return (
     <Grid container spacing={3}>
+      {/* Object Type Selection */}
       <FormGrid size={{ xs: 12, md: 6 }}>
         <FormControl fullWidth>
           <FormLabel htmlFor="selectedObjectType" required>Select Object Type</FormLabel>
@@ -175,14 +193,15 @@ export default function ImageDetails({ onFormDataChange, initialData = {} }) {
         </FormControl>
       </FormGrid>
 
+      {/* Object Name Selection */}
       <FormGrid size={{ xs: 12, md: 6 }}>
         <FormControl fullWidth>
-          <FormLabel htmlFor="selectedObjectName" required>Select Object Name</FormLabel>
+          <FormLabel htmlFor="object_id" required>Select Object Name</FormLabel>
           <Select
             labelId="object-name-label"
-            id="selectedObjectName"
-            name="selectedObjectName"
-            value={formState.selectedObjectName}
+            id="object_id"
+            name="object_id"
+            value={formState.object_id}
             onChange={handleObjectNameChange}
             displayEmpty
             disabled={!formState.selectedObjectType} // Disable if no object type is selected
@@ -197,6 +216,13 @@ export default function ImageDetails({ onFormDataChange, initialData = {} }) {
             ))}
           </Select>
         </FormControl>
+        
+        {/* Display the selected object_id for reference */}
+        {formState.object_id && (
+          <div style={{ marginTop: '8px', fontSize: '0.875rem' }}>
+            Selected object ID: {formState.object_id}
+          </div>
+        )}
       </FormGrid>
       
       <FormGrid size={{ xs: 12, md: 12 }}>

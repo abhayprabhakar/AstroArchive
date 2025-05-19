@@ -62,17 +62,11 @@ export default function AppAppBar() {
           <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
             {/* <Sitemark /> */}
             <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems:'center' }}>
-              <Button variant="text" color="info" size="small">
+              <Button onClick={() => navigate('/')} variant="text" color="info" size="small">
                 Home
-              </Button>
-              <Button variant="text" color="info" size="small">
-                Your Work
               </Button>
               <Button onClick={() => navigate('/checkout')} variant="text" color="info" size="small">
                 Upload
-              </Button>
-              <Button variant="text" color="info" size="small" sx={{ minWidth: 0 }}>
-                FAQ
               </Button>
             </Box>
           </Box>
