@@ -18,6 +18,9 @@ import AppTheme from '../shared-theme/AppTheme';
 import ColorModeSelect from '../shared-theme/ColorModeSelect';
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from './components/CustomIcons';
 
+const serverUrl = import.meta.env.VITE_API_SERVER_URL;
+console.log(serverUrl);
+
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -141,7 +144,7 @@ export default function SignIn(props) {
     const password = data.get('password');
 
     try {
-      const response = await fetch('http://localhost:5000/login', {
+      const response = await fetch(`${serverUrl}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

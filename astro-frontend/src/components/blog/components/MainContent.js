@@ -19,6 +19,8 @@ import RssFeedRoundedIcon from '@mui/icons-material/RssFeedRounded';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
+const serverUrl = import.meta.env.VITE_API_SERVER_URL;
+
 const SyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -127,7 +129,7 @@ export default function MainContent() {
   React.useEffect(() => {
     const fetchRecentUploads = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/recent-uploads', {
+        const response = await fetch(`${serverUrl}/api/recent-uploads`, {
           method: 'GET', // or 'POST', 'PUT', etc.
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -169,7 +171,7 @@ export default function MainContent() {
   };
 
   const getImageUrl = (imageId) => {
-    return `http://localhost:5000/api/image/${imageId}`;
+    return `${serverUrl}/api/image/${imageId}`;
   };
 
   const handlePostClick = (imageId) => {
@@ -296,7 +298,7 @@ export default function MainContent() {
             />
           ))}
         </Box>
-        <Box
+        {/* <Box
           sx={{
             display: { xs: 'none', sm: 'flex' },
             flexDirection: 'row',
@@ -309,7 +311,7 @@ export default function MainContent() {
           <IconButton size="small" aria-label="RSS feed">
             <RssFeedRoundedIcon />
           </IconButton>
-        </Box>
+        </Box> */}
       </Box>
       {renderPosts()}
     </Box>

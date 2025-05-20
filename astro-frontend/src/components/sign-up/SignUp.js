@@ -17,6 +17,8 @@ import AppTheme from '../shared-theme/AppTheme';
 import ColorModeSelect from '../shared-theme/ColorModeSelect';
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from './components/CustomIcons';
 
+const serverUrl = import.meta.env.VITE_API_SERVER_URL;
+
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -128,7 +130,7 @@ export default function SignUp(props) {
     setBackendError('');
 
     try {
-      const response = await fetch('http://localhost:5000/register', {
+      const response = await fetch(`${serverUrl}/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

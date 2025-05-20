@@ -47,6 +47,8 @@ import Footer from './blog/components/Footer';
 import AppTheme from './shared-theme/AppTheme';
 import CssBaseline from '@mui/material/CssBaseline';
 
+const serverUrl = import.meta.env.VITE_API_SERVER_URL;
+
 const ImageDetail = () => {
   const { imageId } = useParams();
   const navigate = useNavigate();
@@ -67,7 +69,7 @@ const ImageDetail = () => {
       try {
         setLoading(true);
         // This would be your actual API call
-        const response = await fetch(`http://localhost:5000/api/images/${imageId}`, {
+        const response = await fetch(`${serverUrl}/api/images/${imageId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -520,7 +522,7 @@ const ImageDetail = () => {
           </Accordion>
 
           {/* Processing History */}
-          <Accordion>
+          {/* <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center' }}>
                 <HistoryIcon sx={{ mr: 1 }} />
@@ -557,7 +559,7 @@ const ImageDetail = () => {
                 </Typography>
               )}
             </AccordionDetails>
-          </Accordion>
+          </Accordion> */}
         </Box>
       </Container>
       <Footer />

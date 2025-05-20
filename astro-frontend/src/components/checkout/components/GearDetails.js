@@ -44,6 +44,8 @@ import FilterIcon from '@mui/icons-material/Tune';
 import DeviceHubIcon from '@mui/icons-material/DeviceHub';
 import ComputerIcon from '@mui/icons-material/Computer';
 
+const serverUrl = import.meta.env.VITE_API_SERVER_URL;
+
 const FormGrid = styled(Grid)(() => ({
   display: 'flex',
   flexDirection: 'column',
@@ -115,7 +117,7 @@ export default function GearDetails({ onFormDataChange, initialData = {}, select
           return;
         }
         
-        const response = await fetch('http://localhost:5000/api/user_id', {
+        const response = await fetch(`${serverUrl}/api/user_id`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -162,7 +164,7 @@ export default function GearDetails({ onFormDataChange, initialData = {}, select
       setGearLoading(true);
       const token = localStorage.getItem('token');
       
-      const response = await fetch('http://localhost:5000/api/gear', {
+      const response = await fetch(`${serverUrl}/api/gear`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -189,7 +191,7 @@ export default function GearDetails({ onFormDataChange, initialData = {}, select
       setLoading(true);
       const token = localStorage.getItem('token');
       
-      const response = await fetch(`http://localhost:5000/api/images/${imageId}/gear`, {
+      const response = await fetch(`${serverUrl}/api/images/${imageId}/gear`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -298,7 +300,7 @@ export default function GearDetails({ onFormDataChange, initialData = {}, select
       let currentUserId = userId;
       if (!currentUserId) {
         try {
-          const userResponse = await fetch('http://localhost:5000/api/user_id', {
+          const userResponse = await fetch(`${serverUrl}/api/user_id`, {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -320,8 +322,8 @@ export default function GearDetails({ onFormDataChange, initialData = {}, select
       }
 
       const url = formState.gear_id 
-        ? `http://localhost:5000/api/gear/${formState.gear_id}`
-        : 'http://localhost:5000/api/gear';
+        ? `${serverUrl}/api/gear/${formState.gear_id}`
+        : `${serverUrl}/api/gear`;
 
       const method = formState.gear_id ? 'PUT' : 'POST';
       
@@ -394,7 +396,7 @@ export default function GearDetails({ onFormDataChange, initialData = {}, select
       setLoading(true);
       const token = localStorage.getItem('token');
       
-      const response = await fetch(`http://localhost:5000/api/gear/${formState.gear_id}`, {
+      const response = await fetch(`${serverUrl}/api/gear/${formState.gear_id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -441,7 +443,7 @@ export default function GearDetails({ onFormDataChange, initialData = {}, select
       let currentUserId = userId;
       if (!currentUserId) {
         try {
-          const userResponse = await fetch('http://localhost:5000/api/user_id', {
+          const userResponse = await fetch(`${serverUrl}/api/user_id`, {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -462,7 +464,7 @@ export default function GearDetails({ onFormDataChange, initialData = {}, select
       // Create an array of gear IDs
       const gearIds = selectedGear.map(gear => gear.gear_id);
       
-      const response = await fetch(`http://localhost:5000/api/images/${selectedImageId}/gear`, {
+      const response = await fetch(`${serverUrl}/api/images/${selectedImageId}/gear`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

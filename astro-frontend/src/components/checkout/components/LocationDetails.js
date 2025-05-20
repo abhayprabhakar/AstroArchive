@@ -31,6 +31,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 
+const serverUrl = import.meta.env.VITE_API_SERVER_URL;
+
 const FormGrid = styled(Grid)(() => ({
   display: 'flex',
   flexDirection: 'column',
@@ -73,7 +75,7 @@ export default function LocationDetails({ onFormDataChange, initialData = {} }) 
           return;
         }
         
-        const response = await fetch('http://localhost:5000/api/user_id', {
+        const response = await fetch(`${serverUrl}/api/user_id`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -137,7 +139,7 @@ export default function LocationDetails({ onFormDataChange, initialData = {} }) 
         throw new Error('Authentication required');
       }
       
-      const response = await fetch('http://localhost:5000/api/locations', {
+      const response = await fetch(`${serverUrl}/api/locations`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -226,7 +228,7 @@ export default function LocationDetails({ onFormDataChange, initialData = {} }) 
       let currentUserId = userId;
       if (!currentUserId) {
         try {
-          const userResponse = await fetch('http://localhost:5000/api/user_id', {
+          const userResponse = await fetch(`${serverUrl}/api/user_id`, {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -248,8 +250,8 @@ export default function LocationDetails({ onFormDataChange, initialData = {} }) 
       }
 
       const url = formState.location_id 
-        ? `http://localhost:5000/api/locations/${formState.location_id}`
-        : 'http://localhost:5000/api/locations';
+        ? `${serverUrl}/api/locations/${formState.location_id}`
+        : `${serverUrl}/api/locations`;
 
       const method = formState.location_id ? 'PUT' : 'POST';
       
@@ -313,7 +315,7 @@ export default function LocationDetails({ onFormDataChange, initialData = {} }) 
         throw new Error('Authentication required');
       }
       
-      const response = await fetch(`http://localhost:5000/api/locations/${formState.location_id}`, {
+      const response = await fetch(`${serverUrl}/api/locations/${formState.location_id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

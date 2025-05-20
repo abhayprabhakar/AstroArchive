@@ -39,6 +39,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
+const serverUrl = import.meta.env.VITE_API_SERVER_URL;
+
 const FormGrid = styled(Grid)(() => ({
   display: 'flex',
   flexDirection: 'column',
@@ -74,6 +76,8 @@ export default function SessionDetails({ onFormDataChange, initialData = {}, sel
   // Add state for user_id
   const [userId, setUserId] = useState(null);
 
+  
+
   // Moon phase options
   const moonPhases = [
     'New Moon',
@@ -96,7 +100,7 @@ export default function SessionDetails({ onFormDataChange, initialData = {}, sel
           return;
         }
         
-        const response = await fetch('http://localhost:5000/api/user_id', {
+        const response = await fetch(`${serverUrl}/api/user_id`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -167,7 +171,7 @@ export default function SessionDetails({ onFormDataChange, initialData = {}, sel
         throw new Error('Authentication required');
       }
       
-      let url = 'http://localhost:5000/api/sessions';
+      let url = `${serverUrl}/api/sessions`;
       
       // If locationId is provided, filter sessions by that location
       if (locationId) {
@@ -201,7 +205,7 @@ export default function SessionDetails({ onFormDataChange, initialData = {}, sel
         throw new Error('Authentication required');
       }
       
-      const response = await fetch('http://localhost:5000/api/locations', {
+      const response = await fetch(`${serverUrl}/api/locations`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -305,7 +309,7 @@ export default function SessionDetails({ onFormDataChange, initialData = {}, sel
       let currentUserId = userId;
       if (!currentUserId) {
         try {
-          const userResponse = await fetch('http://localhost:5000/api/user_id', {
+          const userResponse = await fetch(`${serverUrl}/api/user_id`, {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -327,8 +331,8 @@ export default function SessionDetails({ onFormDataChange, initialData = {}, sel
       }
 
       const url = formState.session_id 
-        ? `http://localhost:5000/api/sessions/${formState.session_id}`
-        : 'http://localhost:5000/api/sessions';
+        ? `${serverUrl}/api/sessions/${formState.session_id}`
+        : `${serverUrl}/api/sessions`;
 
       const method = formState.session_id ? 'PUT' : 'POST';
       
@@ -393,7 +397,7 @@ export default function SessionDetails({ onFormDataChange, initialData = {}, sel
         throw new Error('Authentication required');
       }
       
-      const response = await fetch(`http://localhost:5000/api/sessions/${formState.session_id}`, {
+      const response = await fetch(`${serverUrl}/api/sessions/${formState.session_id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

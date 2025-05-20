@@ -13,6 +13,8 @@ import { useState, useEffect } from 'react';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import dayjs from 'dayjs';
 
+const serverUrl = import.meta.env.VITE_API_SERVER_URL;
+
 const FormGrid = styled(Grid)(() => ({
   display: 'flex',
   flexDirection: 'column',
@@ -41,12 +43,12 @@ export default function ImageDetails({ onFormDataChange, initialData = {} }) {
   const [error, setError] = useState(null);
 
   const objectTypeApiMap = {
-    'Black Hole': 'http://localhost:5000/api/celestial-objects/black_hole',
-    'Galaxy': 'http://localhost:5000/api/celestial-objects/galaxy',
-    'Nebula': 'http://localhost:5000/api/celestial-objects/nebula',
-    'Planet': 'http://localhost:5000/api/celestial-objects/planet',
-    'Star': 'http://localhost:5000/api/celestial-objects/star',
-    'Star Cluster': 'http://localhost:5000/api/celestial-objects/star_cluster',
+    'Black Hole': `${serverUrl}/api/celestial-objects/black_hole`,
+    'Galaxy': `${serverUrl}/api/celestial-objects/galaxy`,
+    'Nebula': `${serverUrl}/api/celestial-objects/nebula`,
+    'Planet': `${serverUrl}/api/celestial-objects/planet`,
+    'Star': `${serverUrl}/api/celestial-objects/star`,
+    'Star Cluster': `${serverUrl}/api/celestial-objects/star_cluster`,
   };
 
   // Validate form fields

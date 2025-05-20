@@ -30,6 +30,8 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 
+const serverUrl = import.meta.env.VITE_API_SERVER_URL;
+
 // Update steps to include Gear Details
 const steps = ['Image Upload', 'Image Details', 'Location details', 'Gear details', 'Session details'];
 
@@ -64,7 +66,7 @@ async function uploadFileInChunks(file, fileType, fileId, onProgress, onComplete
   // Configuration
   const chunkSize = 1024 * 1024; // 1MB chunks
   const totalChunks = Math.ceil(file.size / chunkSize);
-  const endpoint = 'http://localhost:5000/api/chunk-upload';
+  const endpoint = `${serverUrl}/api/chunk-upload`;
   
   try {
     // Initialize upload on server
@@ -528,7 +530,7 @@ if (formData.images && formData.images.darkFlats && Array.isArray(formData.image
     }
 
     // Send the final form data (metadata + small files)
-    const response = await fetch('http://localhost:5000/api/finalize-upload', {
+    const response = await fetch(`${serverUrl}/api/finalize-upload`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
