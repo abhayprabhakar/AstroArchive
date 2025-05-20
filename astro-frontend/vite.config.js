@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import fs from 'fs/promises';
+const serverUrl = import.meta.env.VITE_API_SERVER_URL;
 
 export default defineConfig(() => ({
   plugins: [react()],
@@ -27,7 +28,7 @@ export default defineConfig(() => ({
   server: {
     proxy: {
       '/login': { // Proxy requests to /login to your backend
-        target: 'http://localhost:5000',
+        target: `${serverUrl}`,
         changeOrigin: true, // Required for CORS in some cases
         // rewrite: (path) => path.replace(/^\/api/, ''), // Optional: remove the /api prefix
       },
